@@ -13,7 +13,7 @@ import pygame
 from random import *
 from pygame.locals import *
 import math
-
+import pandas as pd
 # IMPORTS DE FICHIERS
 from levels import *
 
@@ -274,6 +274,17 @@ def score():
     score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
 
     print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
+
+### ENREGISTREMENT CSV ### --------------------------
+
+def save(filename, player_name, score):
+    """ Enregistre le score du joueur dans un csv
+    """
+    data = pd.read_csv(filename+'.csv')
+    attempt_n = data[data.name==player_name].shape[0]+1
+    data.append({'name':player_name, 'attempt_n':attempt_n, 'score':score})
+    data.to_csv(filename+'.csv', index=False)
+
 
 ####################################################
 ##################| VARIABLES |#####################
