@@ -230,7 +230,26 @@ chunk_7 = [
 "         W     W     WW",
 "         W            W",
 "         W            W",
-"wwWWWWW  WWWWWWWWWWWWWW"
+"  WWWWW  WWWWWWWWWWWWWW"
+]
+
+chunk_A1 = [
+"                       ",
+"                       ",
+"                       ",
+"                       ",
+"                       ",
+"                       ",
+"            WWW     WWW",
+"                       ",
+"                       ",
+"        WWW            ",
+"                       ",
+"                       ",
+"     WWW               ",
+"                       ",
+"                       ",
+"WWW                    "
 ]
 
 mini_1 = [
@@ -425,6 +444,7 @@ niveau.append(chunk_52)
 niveau.append(chunk_53)
 niveau.append(chunk_6)
 niveau.append(chunk_7)
+niveau.append(chunk_A1)
 
 # niveau.append(mini_1)
 # niveau.append(mini_2)

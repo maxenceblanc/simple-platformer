@@ -82,8 +82,8 @@ while not over:
 
 
 # Affichage du score dans la console
-score()
-
+score = score()
+print('Score:', score)
 #FIXME: save(filename, player_name, score)
 
 pygame.quit()
