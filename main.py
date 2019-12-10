@@ -13,15 +13,15 @@ import sys
 import pygame
 from pygame.locals import *
 
-# arguments = sys.argv
-# invertCommand = ""
+arguments = sys.argv
+player_name = ""
 
-# if len(arguments) >= 2 and arguments[1] != "reverse":
-#     print("ERROR: Wrong args. Should be like : \n\npython3 main.py reverse\n\nor\n\npython3 main.py")
-#     exit()
+if len(arguments) != 2:
+    print("ERROR: Wrong args. Should be like : \n\npython3 main.py reverse\n\nor\n\npython3 main.py")
+    exit()
 
-# elif len(arguments) == 2:
-#     invertCommand = arguments[1]
+else:
+    player_name = arguments[1]
 
 
 # IMPORTS DE FICHIERS
@@ -82,9 +82,10 @@ while not over:
 
 
 # Affichage du score dans la console
-score = score()
+score, count, secs = score()
 print('Score:', score)
-#FIXME: save(filename, player_name, score)
+filename = "data"
+save(filename, player_name, score, count, secs)
 
 pygame.quit()
 quit

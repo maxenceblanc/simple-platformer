@@ -359,13 +359,9 @@ niveau.append(chunk_52)
 niveau.append(chunk_53)
 niveau.append(chunk_6)
 niveau.append(chunk_7)
-<<<<<<< Updated upstream
-niveau.append(chunk_A1)
-=======
 niveau.append(chunk_8)
 niveau.append(chunk_9)
 niveau.append(chunk_10)
->>>>>>> Stashed changes
 
 
 

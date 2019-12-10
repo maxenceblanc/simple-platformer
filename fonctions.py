@@ -295,16 +295,20 @@ def score():
     spe_weight = 1
     score = count*pos_weight + ((count*20)/secs)*spe_weight
     print('Chunk nb:', count, 'Time:', secs)
-    return(round(score,1))
+    return(round(score,1), count, secs)
 
 ### ENREGISTREMENT CSV ### --------------------------
 
-def save(filename, player_name, score):
+def save(filename, player_name, score, count, secs):
     """ Enregistre le score du joueur dans un csv
     """
-    data = pd.read_csv(filename+'.csv')
+    try:
+        data = pd.read_csv(filename+'.csv')
+    except:
+        data = pd.DataFrame(columns=['name', 'attempt_n', 'score', 'count', 'time'])
+
     attempt_n = data[data.name==player_name].shape[0]+1
-    data.append({'name':player_name, 'attempt_n':attempt_n, 'score':score})
+    data = data.append({'name':player_name, 'attempt_n':attempt_n, 'score':score, 'count': count, 'time': secs}, ignore_index=True)
     data.to_csv(filename+'.csv', index=False)
 
 
