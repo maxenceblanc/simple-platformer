@@ -57,7 +57,7 @@ Sortie :
 
 class Block(object):
 
-    def __init__(self, block_x, block_y):
+    def __init__(self, block_x, block_y, type='default'):
         """ Genere un Block.
         Entrée : coordonnée en x
                  coordonnée en y
@@ -65,6 +65,7 @@ class Block(object):
         # Pour chaque block, on lui applique ses coordonnées et ses dimensions.
         self.rect = pygame.Rect(block_x, block_y, BLOCK_WIDTH, BLOCK_HEIGHT)
         blocks.append(self) # On l'ajoute à la liste des Block
+        self.type = type
 
     def move(self, distance_x, distance_y):
         """ Déplace relativement les blocks.
@@ -150,6 +151,8 @@ def levelGeneration(chunk, x_start) :
 
             if chunk[ligne][colonne] == "W":
                 Block(x,y)
+            elif chunk[ligne][colonne] == "E":
+                Block(x,y, type="end")
 
             y += BLOCK_HEIGHT # On avance vers le bas d'un block.
 
@@ -267,13 +270,21 @@ def display():
 
     pygame.display.update() # raffraichit la FENETRE
 
-# def score():
-#     """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
-#     """
-#     speed = -blocks[0].rect.x / BLOCK_WIDTH * 1000 / pygame.time.get_ticks() # blocks par seconde
-#     score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
+def score():
+    """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
+    """
+    count = 0
 
-#     print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
+    for block in blocks:
+        if block.type == "end" and block.rect.x < Perso.rect.x:
+            count+=1
+
+    # speed = -blocks[0].rect.x / BLOCK_WIDTH * 1000 / pygame.time.get_ticks() # blocks par seconde
+    # score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
+
+    # print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
+    secs = pygame.time.get_ticks() / 1000
+    print(count, secs)
 
 ### ENREGISTREMENT CSV ### --------------------------
 

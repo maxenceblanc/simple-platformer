@@ -21,7 +21,27 @@ pygame.init()
 # Display Setup
 pygame.display.set_caption("simple platformer") # Titre de la Fenetre
 
-score = 0
+
+def unix():
+    Arguments = sys.argv # Liste des arguments
+    if len(Arguments) > 5:
+        print("trop d'arguments (il faut ecrire : \nbase.py -i fichierEntree.txt -o fichierSortie.py)\n")
+        exit()
+    elif len(Arguments) < 5:
+        print("arguments manquants (il faut ecrire : \nbase.py -i fichierEntree.txt -o fichierSortie.py)\n")
+        exit()
+
+    for i in range(len(Arguments)):
+        if Arguments[1] != "-i":
+            print("argument n°2 faux, ce devrait etre : -i\n")
+            exit()
+        if Arguments[3] != "-o":
+            print("argument n°4 faux, ce devrait etre : -o\n")
+            exit()
+        nom_entree = Arguments[2]
+        nom_sortie = Arguments[4]
+    return(nom_entree, nom_sortie)
+
 chunk_num = 0
 
 over = False
@@ -50,11 +70,13 @@ while not over:
     # Bouge le Perso
     bouge()
 
+    print(chunk_num, len(niveau))
+
     # Charge le chunk suivant si nécessaire
     if endOfChunk():
 
         # On selectionne le prochain chunk à générer dans la liste des chunks
-        if chunk_num < len(niveau)-1:
+        if chunk_num < len(niveau):
             next_chunk = niveau[chunk_num]
             chunk_num += 1
 
