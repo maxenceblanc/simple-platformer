@@ -230,7 +230,7 @@ chunk_7 = [
 "         W     W     WW",
 "         W            W",
 "         W            W",
-"  WWWWW  WW   WWWWWWWWW"
+"  WWWWW  WW   WWWWWWWWE"
 ]
 
 
@@ -248,7 +248,7 @@ chunk_8 = [
 "                        ",
 "                        ",
 "                        ",
-"       WWW    WWW    WWW",
+"       WWW    WWW    WWE",
 "        W      W      W ",
 "   WWW  W  WW  W  WW  W ",
 ]
@@ -269,7 +269,7 @@ chunk_9 = [
 "      W       ",
 "              ",
 "              ",
-"WWWWW       WW",
+"WWWWW       WE",
 ]
 
 
