@@ -21,7 +21,8 @@ pygame.init()
 # Display Setup
 pygame.display.set_caption("simple platformer") # Titre de la Fenetre
 
-
+score = 0
+chunk_num = 0
 
 over = False
 
@@ -53,12 +54,14 @@ while not over:
     if endOfChunk():
 
         # On selectionne le prochain chunk à générer dans la liste des chunks
-        next_chunk = niveau[randint(0,NBR_CHUNK-1)]
+        if chunk_num < len(niveau)-1:
+            next_chunk = niveau[chunk_num]
+            chunk_num += 1
 
-        # On trouve la coordonnée x où commencer la génération
-        start_x = blocks[-1].rect.x + BLOCK_WIDTH
+            # On trouve la coordonnée x où commencer la génération
+            start_x = blocks[-1].rect.x + BLOCK_WIDTH
 
-        levelGeneration(next_chunk, start_x)
+            levelGeneration(next_chunk, start_x)
 
     # Affichage dans la fenetre
     display()

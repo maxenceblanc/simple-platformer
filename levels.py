@@ -2,32 +2,15 @@
 #-*- coding: utf-8 -*-
 
 
-
-testChunk = [
-"                                                       W",
-"                                                        ",
-"                                                       W",
-"                                                        ",
-"                                                       W",
-"                                                        ",
-"                                                       W",
-"W W W W W W W W W W W W W W W W W W W W W W W W W W W W ",
-]
-
-
-testChunk2 = [
-"                                                        ",
-"                                                        ",
-"                                                        ",
-"                                      W                 ",
-"       W                              W                W",
-"                    W                                  W",
-"                                                       W",
-"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-]
-
-
 init_1 = [
+"   ",
+"   ",
+"   ",
+"   ",
+"   ",
+"   ",
+"   ",
+"   ",
 "   ",
 "   ",
 "   ",
@@ -40,40 +23,157 @@ init_1 = [
 
 
 chunk_0 = [
-"                                                       ",
-"                                                       ",
-"                                                       ",
-"                                                     WW",
-"                                                     WW",
-"                                                     WW",
-"                                               WW    WW",
-"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"WWWWWWWWWWWWWWWWWWWWW"
 ]
 
-
 chunk_1 = [
-"                                     W                                                                        W",
-"",
-"                                                                                                       WW              W",
-"              W             W         W              WW                  W    W    W    W             W W",
-"                                               WW    WW                                              W  W",
-"                                         WW    WW    WW     W                                       W   W                W",
-"                                         WW    WW    WW     W                                      W    W     W        W",
-"WWWWWWWWWWWWWWWWWW     WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW  WWWWWWWW   WW                       WWWWWW      WWWWW WWWWWWWW ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"          W          ",
+"WWWWWWWWWWWWWWWWWWWWW"
 ]
 
 
 chunk_2 = [
-"                        W                   W           ",
-"                                                        ",
-"             W                         W                ",
-"   W                   W                                ",
-"  W               WW       WWW              W          W",
-"          W                       W                   WW",
-"         WW                       W      W           WWW",
-"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"          W          ",
+"          W          ",
+"          W          ",
+"          W          ",
+"WWWWWWWWWWWWWWWWWWWWW"
 ]
 
+chunk_3 = [
+"                      ",
+"                      ",
+"                      ",
+"                      ",
+"        WWWWWWWWWWWWW ",
+"        W           WW",
+"        W             ",
+"        W             ",
+"        W    WWWWWWWW ",
+"        W           W ",
+"        W           W ",
+"        W           W ",
+"        WWWWWWWWW   W ",
+"                    W ",
+"                    W ",
+"WWWWWWWWWWWWWWWWWWWWWW"
+]
+
+chunk_4 = [
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"        WWWWWWWWWWWWW",
+"                     ",
+"                     ",
+"         WWWWWWWWWWWW",
+"                    W",
+"                    W",
+"WWWWWWWWWWWWWWWWWWWWW"
+]
+
+chunk_5 = [
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"                     ",
+"    W        WWWWWWWW",
+"    W    WWWWW      W",
+"    W               W",
+"    W               W",
+"    WWWWWWWWWWWWW   W",
+"                    W",
+"                    W",
+"WWWWWWWWWWWWWWWWWWWWW"
+]
+
+chunk_6 = [
+"       W             ",
+"       W             ",
+"       W             ",
+"       W             ",
+"       W            W",
+"       W            W",
+"       WW           W",
+"       W           WW",
+"       W            W",
+"       W            W",
+"       WW           W",
+"       W           WW",
+"       W            W",
+"                    W",
+"                    W",
+"WWWWWWWWWWWWWWWWWWWWW"
+]
+
+chunk_7 = [
+"       W             ",
+"       W             ",
+"       W             ",
+"       W             ",
+"       W            W",
+"       W            W",
+"       WW           W",
+"       W           WW",
+"       W            W",
+"       W            W",
+"       WW           W",
+"       W           WW",
+"       W            W",
+"                    W",
+"                    W",
+"WWWWWWWWWWWWWWWWWWWWW"
+]
 
 mini_1 = [
 "          ",
@@ -250,28 +350,19 @@ spe_5 = [
 ]
 
 
-extra_1 = [
-"  W     W                                          ",
-"  WW   WW                                          ",
-"  W W W W    WWW   W WWW   WW WW    WWW   WWWWW    ",
-"  W  W  W   W   W  WW     W  W  W  W   W     W     ",
-"  W     W   W   W  W      W     W  W   W    W      ",
-"  W     W   WWWW   W      W     W  W   W   W       ",
-"  W     W   W      W      W     W  W   W  W        ",
-"  W     W    WWWW  W      W     W   WWW   WWWWW    ",
-]
-
 
 niveau = []
 
 niveau.append(init_1)
 
-#niveau.append(testChunk)
-#niveau.append(testChunk2)
 
-#niveau.append(chunk_0)
-#niveau.append(chunk_1)
-#niveau.append(chunk_2)
+niveau.append(chunk_0)
+niveau.append(chunk_1)
+niveau.append(chunk_2)
+niveau.append(chunk_3)
+niveau.append(chunk_4)
+niveau.append(chunk_5)
+niveau.append(chunk_6)
 
 niveau.append(mini_1)
 niveau.append(mini_2)
@@ -292,7 +383,6 @@ niveau.append(spe_3)
 # niveau.append(spe_4)
 # niveau.append(spe_5)
 
-#niveau.append(extra_1)
 
-HAUTEUR_CHUNK = 8 # En nombre de block
+HAUTEUR_CHUNK = 16 # En nombre de block
 NBR_CHUNK = len(niveau)

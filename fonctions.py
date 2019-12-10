@@ -267,13 +267,13 @@ def display():
 
     pygame.display.update() # raffraichit la FENETRE
 
-def score():
-    """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
-    """
-    speed = -blocks[0].rect.x / BLOCK_WIDTH * 1000 / pygame.time.get_ticks() # blocks par seconde
-    score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
+# def score():
+#     """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
+#     """
+#     speed = -blocks[0].rect.x / BLOCK_WIDTH * 1000 / pygame.time.get_ticks() # blocks par seconde
+#     score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
 
-    print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
+#     print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
 
 ### ENREGISTREMENT CSV ### --------------------------
 
@@ -341,7 +341,7 @@ FREINAGE_X = COEFF_ACCELERATION_X * ACCELERATION_X
 VITESSE_X = 16 * PROPORTION # vitesse_x max
 VITESSE_Y = BLOCK_HEIGHT * (14/16) # vitesse_y max
 # Vitesse camera
-VITESSE_CAMERA_X = 40 * PROPORTION
+VITESSE_CAMERA_X = 80 * PROPORTION
 VITESSE_CAMERA_Y = 5 * PROPORTION
 # Vitesse Rocket
 VITESSE_Rocket = VITESSE_X
