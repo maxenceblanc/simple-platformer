@@ -23,22 +23,22 @@ init_1 = [
 
 
 chunk_0 = [
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"                     ",
-"WWWWWWWWWWWWWWWWWWWWE"
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"WWWWWWWWWWWE"
 ]
 
 chunk_1 = [
@@ -56,7 +56,7 @@ chunk_1 = [
 "                     ",
 "                     ",
 "                     ",
-"          W          ",
+"          W    W     ",
 "WWWWWWWWWWWWWWWWWWWWE"
 ]
 
@@ -201,7 +201,7 @@ chunk_6 = [
 "       W              ",
 "       W            W ",
 "       W            W ",
-"       WWW          W ",
+"       WW           W ",
 "       W          WWW ",
 "       W            W ",
 "       W            W ",
@@ -230,101 +230,59 @@ chunk_7 = [
 "         W     W     WW",
 "         W            W",
 "         W            W",
-"  WWWWW  WWWWWWWWWWWWWW"
-]
-
-chunk_A1 = [
-"                       ",
-"                       ",
-"                       ",
-"                       ",
-"                       ",
-"                       ",
-"            WWW     WWW",
-"                       ",
-"                       ",
-"        WWW            ",
-"                       ",
-"                       ",
-"     WWW               ",
-"                       ",
-"                       ",
-"WWW                    "
-]
-
-mini_1 = [
-"          ",
-"          ",
-"          ",
-"          ",
-"          ",
-"          ",
-"          ",
-"WWW    WWW"
+"  WWWWW  WW   WWWWWWWWW"
 ]
 
 
-mini_2 = [
-"          ",
-"          ",
-"          ",
-"          ",
-"WWW       ",
-"      WWW ",
-"       W  ",
-"WWWWWW W W",
-]
-
-
-mini_3 = [
-"          ",
-"          ",
-"          ",
-"          ",
-"          ",
-"          ",
-" WWWWWWWW ",
-"WWWWWWWWWW",
-]
-
-
-mini_4 = [
-"WW        ",
-"          ",
-"          ",
-"          ",
-"  W       ",
-"          ",
-"          ",
-"W       WW",
-]
-
-
-mini_5 = [
-"        ",
-"        ",
-"WWWWW   ",
-"W W W   ",
-"W W W   ",
-"        ",
-"        ",
-"W W WW  ",
-]
-
-
-mid_1 = [
+chunk_8 = [
 "                        ",
 "                        ",
 "                        ",
 "                        ",
 "                        ",
-"WWW    WWW    WWW    WWW",
-" W      W      W      W ",
-" W  WW  W  WW  W  WW  W ",
+"                        ",
+"                        ",
+"                        ",
+"                        ",
+"                        ",
+"                        ",
+"                        ",
+"                        ",
+"       WWW    WWW    WWW",
+"        W      W      W ",
+"   WWW  W  WW  W  WW  W ",
+]
+
+chunk_9 = [
+"              ",
+"              ",
+"              ",
+"              ",
+"              ",
+"              ",
+"              ",
+"              ",
+"    WW        ",
+"              ",
+"              ",
+"              ",
+"      W       ",
+"              ",
+"              ",
+"WWWWW       WW",
 ]
 
 
-mid_2 = [
+
+chunk_10 = [
+"                             ",
+"                             ",
+"                             ",
+"                             ",
+"                             ",
+"                             ",
+"                             ",
+"                             ",
 "                             ",
 "                             ",
 "                         WWWW",
@@ -335,49 +293,6 @@ mid_2 = [
 "WWWW                         ",
 ]
 
-flat_1 = [
-"                         ",
-"                         ",
-"                         ",
-"                         ",
-"                         ",
-"                         ",
-"                         ",
-"WWWWWWWWWWWWWWWWWWWWWWWWW",
-]
-
-flat_2 = [
-"                         ",
-"          W              ",
-"                         ",
-"                         ",
-"                W        ",
-"                         ",
-"      W                  ",
-"WWWWWWWWWWWWWWWWWWWWWWWWW",
-]
-
-flat_3 = [
-"                         ",
-"        W                ",
-"                     W   ",
-"                         ",
-"                         ",
-"        W                ",
-"        W                ",
-"WWWWWWWWWWWWWWWWWWWWWWWWW",
-]
-
-spe_1 = [
-"                        ",
-"    WW                  ",
-"  W W                   ",
-"  W W                   ",
-"W W WWWWWWWWWW WWWWWW   ",
-"  W                     ",
-"  W                     ",
-"WWWWWWWWWWWWWW WWWWWWW  ",
-]
 
 spe_2 = [
 "      W               W         ",
@@ -444,26 +359,14 @@ niveau.append(chunk_52)
 niveau.append(chunk_53)
 niveau.append(chunk_6)
 niveau.append(chunk_7)
+<<<<<<< Updated upstream
 niveau.append(chunk_A1)
+=======
+niveau.append(chunk_8)
+niveau.append(chunk_9)
+niveau.append(chunk_10)
+>>>>>>> Stashed changes
 
-# niveau.append(mini_1)
-# niveau.append(mini_2)
-# niveau.append(mini_3)
-# niveau.append(mini_4)
-# niveau.append(mini_5)
-
-# niveau.append(mid_1)
-# niveau.append(mid_2)
-
-#niveau.append(flat_1)
-#niveau.append(flat_2)
-#niveau.append(flat_3)
-
-# niveau.append(spe_1)
-# niveau.append(spe_2)
-# niveau.append(spe_3)
-# niveau.append(spe_4)
-# niveau.append(spe_5)
 
 
 HAUTEUR_CHUNK = 16 # En nombre de block
