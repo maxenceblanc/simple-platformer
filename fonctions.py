@@ -291,7 +291,9 @@ def score():
 
     # print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
     secs = pygame.time.get_ticks() / 1000
-    score = count + (count*20)/secs
+    pos_weight = 5
+    spe_weight = 1
+    score = count*pos_weight + ((count*20)/secs)*spe_weight
     print('Chunk nb:', count, 'Time:', secs)
     return(round(score,1))
 
