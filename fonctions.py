@@ -17,6 +17,13 @@ import pandas as pd
 # IMPORTS DE FICHIERS
 from levels import *
 
+##############################
+######## CHANGE HERE #########
+##############################
+invertCommand = "" # "reverse" or ""
+##############################
+##############################
+
 
 """ TO DO LIST
 ? fix minor impacts ajustments
@@ -375,7 +382,7 @@ FENETRE = pygame.display.set_mode((TAILLE_X, # Dimension de la FENETRE
 CLOCK = pygame.time.Clock()
 
 # Commandes
-invertCommand = ""
+
 TOUCHE_DROITE = K_d
 TOUCHE_GAUCHE = K_q
 TOUCHE_HAUT   = K_z
@@ -384,10 +391,11 @@ if invertCommand == "rot":
     TOUCHE_DROITE = K_z
     TOUCHE_GAUCHE = K_d
     TOUCHE_HAUT   = K_q
-elif invertCommand == "inv":
+elif invertCommand == "reverse":
     TOUCHE_DROITE = K_q
     TOUCHE_GAUCHE = K_d
     TOUCHE_HAUT   = K_z
+
 # Commandes camera
 CAMERA_DROITE    = K_RIGHT
 CAMERA_GAUCHE    = K_LEFT

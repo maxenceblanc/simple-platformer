@@ -9,8 +9,20 @@
 ########################
 
 # IMPORTS
+import sys
 import pygame
 from pygame.locals import *
+
+# arguments = sys.argv
+# invertCommand = ""
+
+# if len(arguments) >= 2 and arguments[1] != "reverse":
+#     print("ERROR: Wrong args. Should be like : \n\npython3 main.py reverse\n\nor\n\npython3 main.py")
+#     exit()
+
+# elif len(arguments) == 2:
+#     invertCommand = arguments[1]
+
 
 # IMPORTS DE FICHIERS
 from fonctions import *
@@ -21,26 +33,6 @@ pygame.init()
 # Display Setup
 pygame.display.set_caption("simple platformer") # Titre de la Fenetre
 
-
-def unix():
-    Arguments = sys.argv # Liste des arguments
-    if len(Arguments) > 5:
-        print("trop d'arguments (il faut ecrire : \nbase.py -i fichierEntree.txt -o fichierSortie.py)\n")
-        exit()
-    elif len(Arguments) < 5:
-        print("arguments manquants (il faut ecrire : \nbase.py -i fichierEntree.txt -o fichierSortie.py)\n")
-        exit()
-
-    for i in range(len(Arguments)):
-        if Arguments[1] != "-i":
-            print("argument n°2 faux, ce devrait etre : -i\n")
-            exit()
-        if Arguments[3] != "-o":
-            print("argument n°4 faux, ce devrait etre : -o\n")
-            exit()
-        nom_entree = Arguments[2]
-        nom_sortie = Arguments[4]
-    return(nom_entree, nom_sortie)
 
 chunk_num = 0
 
