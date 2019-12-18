@@ -16,12 +16,18 @@ from pygame.locals import *
 arguments = sys.argv
 player_name = ""
 
-if len(arguments) != 2:
-    print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player\n\n")
+if len(arguments) != 3:
+    print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player normal\n\n")
     exit()
 
 else:
     player_name = arguments[1]
+    if arguments[2]=='normal':
+        reversed_screen = False
+    elif arguments[2]=='reverse':
+        reversed_screen = True
+    else:
+        raise Exception('Invalide second argument. Should be: \n\nnormal or reverse\n\n')
 
 
 # IMPORTS DE FICHIERS
@@ -39,6 +45,8 @@ chunk_num = 0
 prev_count = 0
 
 over = False
+
+chunk_times = []
 
 # Génère le premier chunk et retourne sa longueur en block
 levelGeneration(niveau[0], 0)
@@ -71,7 +79,14 @@ while not over:
             count+=1
     
     if count == prev_count + 1:
+        time_track = pygame.time.get_ticks() / 1000
         print("chunck n°", count, ": ", pygame.time.get_ticks() / 1000)
+
+        if len(chunk_times)>0:
+            chunk_times.append(round(time_track-chunk_times[-1], 3))
+        else:
+            chunk_times.append(round(time_track,3))
+        
         prev_count+=1
 
     # Charge le chunk suivant si nécessaire
@@ -92,10 +107,10 @@ while not over:
 
 
 # Affichage du score dans la console
-score, count, secs = score()
+score, count, secs = score(time_track)
 print('Score:', score)
 filename = "data"
-save(filename, player_name, score, count, secs)
+save(filename, player_name, reversed_screen, score, count, secs, chunk_times, NBR_CHUNK)
 
 pygame.quit()
 quit

@@ -298,7 +298,7 @@ chunk_10 = [
 
 niveau = []
 
-niveau.append(init_1)
+# niveau.append(init_1)
 
 
 niveau.append(chunk_0)

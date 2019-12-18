@@ -18,7 +18,7 @@ import pandas as pd
 from levels import *
 
 ##############################
-######## CHANGE HERE #########
+######>> CHANGE HERE <<#######
 ##############################
 invertCommand = "" # "reverse" or ""
 ##############################
@@ -277,7 +277,7 @@ def display():
 
     pygame.display.update() # raffraichit la FENETRE
 
-def score():
+def score(secs):
     """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
     """
     count = 0
@@ -290,25 +290,56 @@ def score():
     # score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
 
     # print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
-    secs = pygame.time.get_ticks() / 1000
+    final = pygame.time.get_ticks() / 1000
     pos_weight = 2.5
     spe_weight = 1
     score = count*pos_weight + ((count*20)/secs**1.5)*spe_weight
-    print('Chunk nb:', count, 'Time:', secs)
-    return(round(score,1), count, secs)
+    print('Chunk nb:', count, 'Time:', final)
+    return(round(score,1), count, final)
 
 ### ENREGISTREMENT CSV ### --------------------------
 
-def save(filename, player_name, score, count, secs):
+def save(filename, player_name, reversed_screen, score, count, secs, chunk_times, nb_chunks):
     """ Enregistre le score du joueur dans un csv
     """
+    if len(chunk_times)>nb_chunks:
+        raise Exception('Number of chunks incorrect.')
+    
+    # Load the data into a DataFrame or create a new DataFrame
     try:
         data = pd.read_csv(filename+'.csv')
     except:
-        data = pd.DataFrame(columns=['name', 'attempt_n', 'score', 'count', 'time'])
+        data = pd.DataFrame(columns=[
+            'name',
+            'attempt_n',
+            'reversed_screen',
+            'inverted_keys',
+            'score',
+            'count',
+            'time'
+        ]+['chunk_'+str(i) for i in range(1,nb_chunks+1)])
 
     attempt_n = data[data.name==player_name].shape[0]+1
-    data = data.append({'name':player_name, 'attempt_n':attempt_n, 'score':score, 'count': count, 'time': secs}, ignore_index=True)
+    # create new entry
+    new_entry = {
+        'name':player_name,
+        'attempt_n':attempt_n,
+        'reversed_screen': reversed_screen,
+        'inverted_keys': True if invertCommand=='reverse' else False,
+        'score':score,
+        'count': count,
+        'time': secs
+    }
+    new_entry.update({'chunk_'+str(i): chunk_times[i-1] for i in range(1,len(chunk_times)+1)})
+    
+    if len(chunk_times) < nb_chunks:
+        new_entry.update({'chunk_'+str(i): None for i in range(len(chunk_times)+1, nb_chunks+1)})
+
+    try:
+        data = data.append(new_entry, ignore_index=True)
+    except:
+        raise Exception('New entry format invalid.')
+
     data.to_csv(filename+'.csv', index=False)
 
 
