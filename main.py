@@ -17,7 +17,7 @@ arguments = sys.argv
 player_name = ""
 
 if len(arguments) != 2:
-    print("ERROR: Wrong args. Should be like : \n\npython3 main.py reverse\n\nor\n\npython3 main.py")
+    print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player\n\n")
     exit()
 
 else:
@@ -35,6 +35,8 @@ pygame.display.set_caption("simple platformer") # Titre de la Fenetre
 
 
 chunk_num = 0
+
+prev_count = 0
 
 over = False
 
@@ -62,7 +64,15 @@ while not over:
     # Bouge le Perso
     bouge()
 
-    print(chunk_num, len(niveau))
+    # Not very viable but works for that list length
+    count = 0
+    for block in blocks:
+        if block.type == "end" and block.rect.x < Perso.rect.x:
+            count+=1
+    
+    if count == prev_count + 1:
+        print("chunck n°", count, ": ", pygame.time.get_ticks() / 1000)
+        prev_count+=1
 
     # Charge le chunk suivant si nécessaire
     if endOfChunk():

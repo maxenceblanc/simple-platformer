@@ -285,7 +285,7 @@ chunk_10 = [
 "                             ",
 "                             ",
 "                             ",
-"                         WWWW",
+"                         WWWE",
 "                    WWWW     ",
 "               WWWW          ",
 "          WWWW               ",
@@ -293,53 +293,6 @@ chunk_10 = [
 "WWWW                         ",
 ]
 
-
-spe_2 = [
-"      W               W         ",
-"      W          WWW  W         ",
-"      W               W         ",
-"      WW              W         ",
-"      W               W         ",
-"                      W         ",
-"                      W         ",
-"     WWWWWW           W      WW ",
-]
-
-
-spe_3 = [
-"         W                      ",
-"         W                      ",
-"         W            WW        ",
-"                                ",
-"      W                         ",
-"      WWWWW                     ",
-" W                              ",
-"WW                              ",
-]
-
-
-spe_4 = [
-"                                       ",
-"                                       ",
-"                                       ",
-"                                  WWW  ",
-"               WW                      ",
-"                                       ",
-"WWW                                    ",
-"W                                 WWW  ",
-]
-
-
-spe_5 = [
-"  W              WWW                       ",
-"  WW                                       ",
-"                                           ",
-"             W                             ",
-"            WW                             ",
-"                                           ",
-"                                           ",
-"WWW                                       W",
-]
 
 
 
@@ -361,7 +314,7 @@ niveau.append(chunk_6)
 niveau.append(chunk_7)
 niveau.append(chunk_8)
 niveau.append(chunk_9)
-niveau.append(chunk_10)
+niveau.append(chunk_10) # 24.408
 
 
 
