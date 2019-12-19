@@ -40,17 +40,18 @@ pygame.init()
 pygame.display.set_caption("simple platformer") # Titre de la Fenetre
 
 
-chunk_num = 0
+chunk_num = 1
 
 prev_count = 0
 
-over = False
-
 chunk_times = []
+
+last_time = 0
 
 # Génère le premier chunk et retourne sa longueur en block
 levelGeneration(niveau[0], 0)
 
+over = False
 while not over:
 
     CLOCK.tick(20) # 20 FPS
@@ -79,15 +80,13 @@ while not over:
             count+=1
     
     if count == prev_count + 1:
-        time_track = pygame.time.get_ticks() / 1000
-        print("chunck n°", count, ": ", pygame.time.get_ticks() / 1000)
+        current_time = pygame.time.get_ticks() / 1000
+        print("chunck n°", count, ": ", current_time)
 
-        if len(chunk_times)>0:
-            chunk_times.append(round(time_track-chunk_times[-1], 3))
-        else:
-            chunk_times.append(round(time_track,3))
-        
+        chunk_times.append(round(current_time-last_time, 3))
+        last_time = current_time
         prev_count+=1
+
 
     # Charge le chunk suivant si nécessaire
     if endOfChunk():
@@ -107,7 +106,7 @@ while not over:
 
 
 # Affichage du score dans la console
-score, count, secs = score(time_track)
+score, count, secs = score(current_time)
 print('Score:', score)
 filename = "data"
 save(filename, player_name, reversed_screen, score, count, secs, chunk_times, NBR_CHUNK)
