@@ -22,7 +22,7 @@ $ python3 main.py "name" "mode"
 *First experiment (during 7min)*
 
 ```sh
-$ python3 main.py emmanuel normal
+$ python3 main.py "name" normal
 ```
 
 *Second experiment (during 7min)*
@@ -30,6 +30,6 @@ $ python3 main.py emmanuel normal
 Reverse the screen manually.
 
 ```sh
-$ python3 main.py emmanuel reverse
+$ python3 main.py "name" reverse
 ```
 
