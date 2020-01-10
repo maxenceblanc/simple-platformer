@@ -15,7 +15,7 @@ $ python3 main.py "name" "mode"
 
 ### Experiment
 
-* Emmanuel, LC et Dorian: normal game then reversed screen mode.
+* Emmanuel and LC: normal game then reversed screen mode.
 
 **commands**
 
@@ -31,5 +31,23 @@ Reverse the screen manually.
 
 ```sh
 $ python3 main.py "name" reverse
+```
+
+* Dorian: revered screen mode then normal
+
+**commands**
+
+*First experiment (during 7min)*
+
+Reverse the screen manually.
+
+```sh
+$ python3 main.py "name" reverse
+```
+
+*Second experiment (during 7min)*
+
+```sh
+$ python3 main.py "name" normal
 ```
 
