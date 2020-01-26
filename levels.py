@@ -22,7 +22,7 @@ init_1 = [
 ]
 
 
-chunk_0 = [
+chunk_1 = [
 "            ",
 "            ",
 "            ",
@@ -41,7 +41,7 @@ chunk_0 = [
 "WWWWWWWWWWWE"
 ]
 
-chunk_1 = [
+chunk_2 = [
 "                     ",
 "                     ",
 "                     ",
@@ -61,7 +61,7 @@ chunk_1 = [
 ]
 
 
-chunk_2 = [
+chunk_3 = [
 "                     ",
 "                     ",
 "                     ",
@@ -80,7 +80,7 @@ chunk_2 = [
 "WWWWWWWWWWWWWWWWWWWWE"
 ]
 
-chunk_3 = [
+chunk_4 = [
 "                      ",
 "                      ",
 "                      ",
@@ -99,7 +99,7 @@ chunk_3 = [
 "WWWWWWWWWWWWWWWWWWWWWE"
 ]
 
-chunk_4 = [
+chunk_5 = [
 "                     ",
 "                     ",
 "                     ",
@@ -118,7 +118,7 @@ chunk_4 = [
 "WWWWWWWWWWWWWWWWWWWWE"
 ]
 
-chunk_5 = [
+chunk_6 = [
 "                     ",
 "                     ",
 "                     ",
@@ -137,7 +137,7 @@ chunk_5 = [
 "WWWWWWWWWWWWWWWWWWWWE"
 ]
 
-chunk_51 = [
+chunk_7 = [
 "                     ",
 "                     ",
 "                     ",
@@ -156,7 +156,7 @@ chunk_51 = [
 "WWWWWWWWWW      WWWWE"
 ]
 
-chunk_52 = [
+chunk_8 = [
 "                     ",
 "                     ",
 "                     ",
@@ -175,7 +175,7 @@ chunk_52 = [
 "WWWW    WWWW     WWWE"
 ]
 
-chunk_53 = [
+chunk_9 = [
 "                     ",
 "                     ",
 "                     ",
@@ -194,7 +194,7 @@ chunk_53 = [
 "WWWW             WWWE"
 ]
 
-chunk_6 = [
+chunk_10 = [
 "                WWWWWW",
 "                      ",
 "                      ",
@@ -214,7 +214,7 @@ chunk_6 = [
 ]
 
 
-chunk_7 = [
+chunk_11 = [
 "                       ",
 "                       ",
 "                       ",
@@ -234,7 +234,7 @@ chunk_7 = [
 ]
 
 
-chunk_8 = [
+chunk_12 = [
 "                        ",
 "                        ",
 "                        ",
@@ -253,7 +253,7 @@ chunk_8 = [
 "   WWW  W  WW  W  WW  W ",
 ]
 
-chunk_9 = [
+chunk_13 = [
 "              ",
 "              ",
 "              ",
@@ -274,7 +274,7 @@ chunk_9 = [
 
 
 
-chunk_10 = [
+chunk_14 = [
 "                             ",
 "                             ",
 "                             ",
@@ -296,27 +296,27 @@ chunk_10 = [
 
 
 
-niveau = []
+level = []
 
-# niveau.append(init_1)
-
-
-niveau.append(chunk_0)
-niveau.append(chunk_1)
-niveau.append(chunk_2)
-niveau.append(chunk_3)
-niveau.append(chunk_4)
-niveau.append(chunk_5)
-niveau.append(chunk_51)
-niveau.append(chunk_52)
-niveau.append(chunk_53)
-niveau.append(chunk_6)
-niveau.append(chunk_7)
-niveau.append(chunk_8)
-niveau.append(chunk_9)
-niveau.append(chunk_10) # 24.408
+# level.append(init_1)
 
 
+level.append(chunk_1)
+level.append(chunk_2)
+level.append(chunk_3)
+level.append(chunk_4)
+level.append(chunk_5)
+level.append(chunk_6)
+level.append(chunk_7)
+level.append(chunk_8)
+level.append(chunk_9)
+level.append(chunk_10) 
+level.append(chunk_11)
+level.append(chunk_12)
+level.append(chunk_13)
+level.append(chunk_14) # 24.406, 24.184, 23.253
 
-HAUTEUR_CHUNK = 16 # En nombre de block
-NBR_CHUNK = len(niveau)
+
+
+HAUTEUR_CHUNK = 16 # in amount of blocks
+NBR_CHUNK = len(level)

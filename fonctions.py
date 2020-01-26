@@ -2,10 +2,9 @@
 #-*- coding: utf-8 -*-
 
 ########################
-# Python 3.5.2
-# Author: Maxence BLANC
-# Last modified : 10/17
-# Titre du Fichier : Fonctions et Classes
+# Python 3.6.9
+# Author : Maxence Blanc - https://github.com/maxenceblanc
+# Creation Date : 11/2019
 ########################
 
 # IMPORTS
@@ -14,6 +13,7 @@ from random import *
 from pygame.locals import *
 import math
 import pandas as pd
+
 # IMPORTS DE FICHIERS
 from levels import *
 
@@ -26,8 +26,6 @@ invertCommand = "" # "reverse" or ""
 
 
 """ TO DO LIST
-? fix minor impacts ajustments
-ADD Explosion effect
 """
 
 
@@ -38,25 +36,13 @@ Ans :
 
 """ NOTES
 
-
-
-
-les coordonnées fonctionnent ainsi:
+coordinates:
 0 - - - - -> (x)
 |
 |
 |
 v (y)
 """
-
-
-""" Commentaires
-A quoi sert la fonction. Comment elle marche
-Entrée :
-Variables :
-Sortie :
-"""
-
 
 ####################################################
 ###################| CLASSES |######################
@@ -65,22 +51,26 @@ Sortie :
 class Block(object):
 
     def __init__(self, block_x, block_y, type='default'):
-        """ Genere un Block.
-        Entrée : coordonnée en x
-                 coordonnée en y
+        """ Creates a Block.
+
+        INPUTS: 
+                x coordinate
+                y coordinate
         """
-        # Pour chaque block, on lui applique ses coordonnées et ses dimensions.
+        # Applies coordinates and sizes.
         self.rect = pygame.Rect(block_x, block_y, BLOCK_WIDTH, BLOCK_HEIGHT)
-        blocks.append(self) # On l'ajoute à la liste des Block
+        blocks.append(self) # Add it to the block list #TODO: remove the inside append
         self.type = type
 
     def move(self, distance_x, distance_y):
-        """ Déplace relativement les blocks.
-        Entrée : la distance à parcourir en x
-                 la distance à parcourir en y
+        """ Moves the blocks relatively.
+
+        INPUTS: 
+                distance in x
+                distance in y
         """
         self.rect.x += distance_x
-        self.rect.y += distance_y # inutilisé ici
+        self.rect.y += distance_y # unused here
 
 class Player(object):
 
@@ -94,16 +84,16 @@ class Player(object):
 
         self.rect.x += self.vitesse_x
 
-        # Ajustement pour ne pas dépasser le milieu
+        # Ajusting not to get past the middle of the screen
         if self.rect.x > TAILLE_X/2:
             self.rect.x = TAILLE_X/2
 
-        # et le coté gauche de la FENETRE
+        # Ajusting not to get past the left side of the screen
         if self.rect.x < 0:
             self.rect.x = 0
             self.vitesse_x = 0
 
-        # Pour faire avancer la map quand Perso est au milieu
+        # Moves the level when the Player reaches the middle of the screen
         if self.rect.x == TAILLE_X/2 and self.vitesse_x > 0:
             for Block in blocks:
                 Block.move (-self.vitesse_x, 0)
@@ -137,21 +127,25 @@ class Player(object):
 ##################| FONCTIONS |#####################
 ####################################################
 
-### GENERATION DU TERRAIN ### ----------------------
+### LEVEL GENERATION ### ----------------------
 
 def levelGeneration(chunk, x_start) :
-    """ Génère le chunk à partir de la coordonnée de départ.
-    Entrée : Le chunk à générer (liste de str)
-             La coordonnée x de départ
-    Variables : x = coordonnées x du prochain block à générer
-                y = coordonnées y du prochain block à générer
+    """ Loads the chunk from the start coordinate.
+
+    INPUTS: 
+            the chunk to be loaded, [str, ..]
+            the start coordinate
+
+    VARIABLES: 
+                x = x coordinate of the next block to be created
+                y = y coordinate of the next block to be created
     """
 
-    # On place le point de départ pour la génération.
+    # Sets the stardu joueur dans unt for the generation.
     x, y = x_start, (VISIBILITE_Y-1) * HAUTEUR_CHUNK * BLOCK_HEIGHT
 
 
-    # Génération
+    # Generation
     for colonne in range(len(chunk[0])):
 
         for ligne in range(len(chunk)):
@@ -161,16 +155,19 @@ def levelGeneration(chunk, x_start) :
             elif chunk[ligne][colonne] == "E":
                 Block(x,y, type="end")
 
-            y += BLOCK_HEIGHT # On avance vers le bas d'un block.
+            y += BLOCK_HEIGHT # Goes downwards of one block
 
-        x += BLOCK_WIDTH # On avance vers la droite d'un block.
-        y = (VISIBILITE_Y-1) * HAUTEUR_CHUNK * BLOCK_HEIGHT # On remonte
+        x += BLOCK_WIDTH # Goes right of block
+        y = (VISIBILITE_Y-1) * HAUTEUR_CHUNK * BLOCK_HEIGHT # Get back up
 
 def endOfChunk():
-    """ Detecte si le dernier block du dernier chunk est affiché.
-    Sortie : True si le dernier block est affiché
-             False sinon
+    """ Detects if the last block from the last chunk is on screen.
+
+    OUTPUT: 
+            True if last block is on screen
+            False otherwise
     """
+
     if blocks[-1].rect.x < TAILLE_X:
         return(True)
     return(False)
@@ -178,62 +175,64 @@ def endOfChunk():
 ### INTERACTIONS PERSONNAGE ### --------------------
 
 def bouge():
-    """ Detecte les touches appuyés et modifie les vitesses
-    en conséquence. Applique ensuite le freinage
+    """ Detects pressed keys and changes speeds accordingly. 
+    Then applies slowdowns.
     """
 
     k = pygame.key.get_pressed()
 
-    # Déplacements horizontaux #
+    # Horizontal movements #
 
-    # Gauche
+    # Left
     if k[TOUCHE_GAUCHE]:
         if Perso.vitesse_x > 0:
             freinage()
         else:
             Perso.vitesse_x -= ACCELERATION_X
-    # Droite
+    # Right
     elif k[TOUCHE_DROITE]:
         if Perso.vitesse_x < 0:
             freinage()
         else:
             Perso.vitesse_x += ACCELERATION_X
 
-    # Ralentissement doux si les touches D/G ne sont pas utilisées
+    # Gentle slowdowns if L/R keys aren't in use
     else:
         if Perso.vitesse_x > 0:
             Perso.vitesse_x -= 1
         elif Perso.vitesse_x < 0:
             Perso.vitesse_x += 1
 
-    # Déplacements verticaux #
+    # Vertical movements #
 
-    # Gravité
+    # Gravity
     if not sol():
         Perso.vitesse_y += ACCELERATION_Y
 
-    if k[TOUCHE_HAUT] and sol(): # Haut
-        Perso.vitesse_y = -VITESSE_Y # - pour aller vers le haut
+    if k[TOUCHE_HAUT] and sol(): # Up
+        Perso.vitesse_y = -VITESSE_Y # - to go upwards
 
-    # Limitation de vitesse_x
+    # x speed limit
     if Perso.vitesse_x < -VITESSE_X:
         Perso.vitesse_x = -VITESSE_X
     elif Perso.vitesse_x > VITESSE_X:
         Perso.vitesse_x = VITESSE_X
 
-    # Applique les vitesses au Perso
+    # Applies speeds to the Player
     Perso.move()
 
 def freinage():
     """
     """
+
     if 1 > Perso.vitesse_x / FREINAGE_X > -1 : Perso.vitesse_x = 0
     elif Perso.vitesse_x < 0 : Perso.vitesse_x = int(Perso.vitesse_x / FREINAGE_X)
     else : Perso.vitesse_x = int(Perso.vitesse_x / FREINAGE_X)
 
 def sol():
-    """ Detecte si un Block se trouve sous le Perso
+    """ Detects if a Block is under the Player
     """
+    
     for Block in blocks:
         for pixel in range(-(BLOCK_WIDTH-1),BLOCK_WIDTH):
             if Perso.rect.bottom == Block.rect.top and Perso.rect.left == Block.rect.left + pixel:
@@ -242,10 +241,10 @@ def sol():
 
 
 
-### AFFICHAGE FENETRE ### --------------------------
+### WINDOW DISPLAY ### --------------------------
 
 def camera():
-    """ Deplace la camera
+    """ Moves the camera.
     """
 
     k = pygame.key.get_pressed()
@@ -263,33 +262,31 @@ def camera():
         Perso.rect.x += VITESSE_CAMERA_X
 
 def display():
-    """ Met à jour l'affichage
+    """ Updates the display
     """
-    FENETRE.fill(GRIS) # Fond de FENETRE
 
-    # Dessine chaque Block
+    FENETRE.fill(GRIS) # background of FENETRE
+
+    # Draws each Block
     for Block in blocks:
         pygame.draw.rect(FENETRE, BLANC, Block.rect)
 
-    pygame.draw.rect(FENETRE, ORANGE, Perso.rect) # Dessine le Perso
+    pygame.draw.rect(FENETRE, ORANGE, Perso.rect) # draws the player
 
-    ### Espace dispo pour affichage des objets ###
+    ### Free space for object display ###
 
-    pygame.display.update() # raffraichit la FENETRE
+    pygame.display.update() # refreshes FENETRE
 
 def score(secs):
-    """ Score en fonction de la vitesse (Block/sec) et de la distance parcourue
+    """ Score according to speed (Block/sec) and distance traveled
     """
+
     count = 0
 
     for block in blocks:
         if block.type == "end" and block.rect.x < Perso.rect.x:
             count+=1
 
-    # speed = -blocks[0].rect.x / BLOCK_WIDTH * 1000 / pygame.time.get_ticks() # blocks par seconde
-    # score = -blocks[0].rect.x / BLOCK_WIDTH / 10 * speed # blocks au carré par seconde
-
-    # print(str(int(speed)) + " speed et " + str(int(score)) + "pts")
     final = pygame.time.get_ticks() / 1000
     pos_weight = 2.5
     spe_weight = 1
@@ -297,15 +294,16 @@ def score(secs):
     print('Chunk nb:', count, 'Time:', final)
     return(round(score,1), count, final)
 
-### ENREGISTREMENT CSV ### --------------------------
+### CSV SAVE ### --------------------------
 
 def save(filename, player_name, reversed_screen, score, count, secs, chunk_times, nb_chunks):
-    """ Enregistre le score du joueur dans un csv
+    """ Saves the player's score in a csv.
     """
+
     if len(chunk_times)>nb_chunks:
         raise Exception('Number of chunks incorrect.')
     
-    # Load the data into a DataFrame or create a new DataFrame
+    # Loads the data into a DataFrame or create a new DataFrame
     try:
         data = pd.read_csv(filename+'.csv')
     except:
@@ -320,7 +318,7 @@ def save(filename, player_name, reversed_screen, score, count, secs, chunk_times
         ]+['chunk_'+str(i) for i in range(1,nb_chunks+1)])
 
     attempt_n = data[data.name==player_name].shape[0]+1
-    # create new entry
+    # creates new entry
     new_entry = {
         'name':player_name,
         'attempt_n':attempt_n,
@@ -347,43 +345,39 @@ def save(filename, player_name, reversed_screen, score, count, secs, chunk_times
 ##################| VARIABLES |#####################
 ####################################################
 
-# Liste de tout les block "Block"
+# List of all the Blocks
 blocks = []
 
-chunk_lenght = 0 # inutilisé pour le moment
+chunk_lenght = 0 # unused at the moment
 
 
 
-####################################################
-##################| CONSTANTES |####################
-####################################################
+###################################################
+##################| CONSTANTS |####################
+###################################################
 
-# Coefficient de Proportions (pour augmenter les physiques proportionnellement)
+# Coefficient of Proportions (to increase physics proportionally)
 PROPORTION = 1
 
-# Taille des blocks
+# Size of blocks
 BLOCK_WIDTH  = 16 * PROPORTION
 BLOCK_HEIGHT = 16 * PROPORTION
 
-# Pour l'affichage
-VISIBILITE_X = 45 # Largeur de la FENETRE en nombre de block.
-VISIBILITE_Y = 2 # Hauteur de la FENETRE en nombre de hauteur de chunk.
-TAILLE_X = BLOCK_WIDTH * VISIBILITE_X # Largeur de la FENETRE en pixels.
-TAILLE_Y = HAUTEUR_CHUNK * BLOCK_HEIGHT * VISIBILITE_Y # Hauteur de la FENETRE en pixels.
+# For the display
+VISIBILITE_X = 45 # Width of FENETRE in amount of blocks.
+VISIBILITE_Y = 2 # Height of FENETRE in amount of chunk height.
+TAILLE_X = BLOCK_WIDTH * VISIBILITE_X # Width of FENETRE in pixels.
+TAILLE_Y = HAUTEUR_CHUNK * BLOCK_HEIGHT * VISIBILITE_Y # Height of FENETRE in pixels.
 
-# Taille du Perso
+# Player size
 Perso_WIDTH  = 1 * BLOCK_WIDTH
 Perso_HEIGHT = 2 * BLOCK_HEIGHT
 
-# Taille des Rocket
-Rocket_WIDTH = BLOCK_WIDTH/2
-Rocket_HEIGHT = BLOCK_HEIGHT/2
-
-# Depart
+# Start
 START_X = 0
 START_Y = TAILLE_Y - BLOCK_HEIGHT - Perso_HEIGHT
 
-# Couleurs
+# Colours
 BLANC = (255, 255, 255)
 GRIS = (30,30,30)
 ORANGE = (255, 125, 0)
@@ -394,34 +388,24 @@ ACCELERATION_X = 1 * PROPORTION
 ACCELERATION_Y = 1.67 * PROPORTION
 COEFF_ACCELERATION_X = 1.3
 FREINAGE_X = COEFF_ACCELERATION_X * ACCELERATION_X
-# Vitesse
+# Speed
 VITESSE_X = 16 * PROPORTION # vitesse_x max
 VITESSE_Y = BLOCK_HEIGHT * (14/16) # vitesse_y max
-# Vitesse camera
+# Camera speed
 VITESSE_CAMERA_X = 80 * PROPORTION
 VITESSE_CAMERA_Y = 5 * PROPORTION
-# Vitesse Rocket
-VITESSE_Rocket = VITESSE_X
 
-# Propriétés des Explosion
-Explosion_LIFETIME = 3
-Explosion_RADIUS = 1.5 * BLOCK_WIDTH# en pixels
-
-# Distance à laquelle les projectiles disparraissent
-DISTANCE_LIMITE = TAILLE_X
-
-# Init le Joueur
+# Init the Player
 Perso = Player()
 
 # Display Setup
-FENETRE = pygame.display.set_mode((TAILLE_X, # Dimension de la FENETRE
+FENETRE = pygame.display.set_mode((TAILLE_X, # Dimensions of FENETRE
                                    TAILLE_Y))
 
 # Time
 CLOCK = pygame.time.Clock()
 
-# Commandes
-
+# Keys
 TOUCHE_DROITE = K_d
 TOUCHE_GAUCHE = K_q
 TOUCHE_HAUT   = K_z
@@ -430,11 +414,12 @@ if invertCommand == "rot":
     TOUCHE_DROITE = K_z
     TOUCHE_GAUCHE = K_d
     TOUCHE_HAUT   = K_q
+
 elif invertCommand == "reverse":
     TOUCHE_DROITE = K_q
     TOUCHE_GAUCHE = K_d
     TOUCHE_HAUT   = K_z
 
-# Commandes camera
+# Camera keys
 CAMERA_DROITE    = K_RIGHT
 CAMERA_GAUCHE    = K_LEFT

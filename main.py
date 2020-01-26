@@ -2,10 +2,9 @@
 #-*- coding: utf-8 -*-
 
 ########################
-# Python 3.7
-# Author: Maxence BLANC
-# Date created : 11/19
-# Titre du Fichier : Boucle de Jeu
+# Python 3.6.9
+# Author : Maxence Blanc - https://github.com/maxenceblanc
+# Creation Date : 11/2019
 ########################
 
 # IMPORTS
@@ -17,7 +16,7 @@ arguments = sys.argv
 player_name = ""
 
 if len(arguments) != 3:
-    print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player normal\n\n")
+    print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player normal\n\nor\n\npython3 main.py name_of_player reverse\n\n")
     exit()
 
 else:
@@ -27,29 +26,27 @@ else:
     elif arguments[2]=='reverse':
         reversed_screen = True
     else:
-        raise Exception('Invalide second argument. Should be: \n\nnormal or reverse\n\n')
+        raise Exception('Invalid second argument. Should be: \n\nnormal or reverse\n\n')
 
 
-# IMPORTS DE FICHIERS
+# EXTRA FILES
 from fonctions import *
 
-# Initialise pygame
+# Initializes pygame
 pygame.init()
 
 # Display Setup
-pygame.display.set_caption("simple platformer") # Titre de la Fenetre
+pygame.display.set_caption("simple platformer") # sets the window's title
 
-
+# Variables
 chunk_num = 1
-
 prev_count = 0
 
 chunk_times = []
-
 last_time = 0
 
-# Génère le premier chunk et retourne sa longueur en block
-levelGeneration(niveau[0], 0)
+# Loads the first chunk
+levelGeneration(level[0], 0)
 
 over = False
 while not over:
@@ -61,16 +58,16 @@ while not over:
         pygame.event.set_allowed((QUIT, MOUSEBUTTONDOWN, KEYDOWN))
         pygame.event.pump()
 
-        if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # condition pour quitter
+        if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
             over = True
 
     if Perso.rect.y + Perso_HEIGHT > TAILLE_Y:
         over = True
 
-    # Deplace la camera si besoin
+    # Moves the camera if needed
     camera()
 
-    # Bouge le Perso
+    # Moves the Player
     bouge()
 
     # Not very viable but works for that list length
@@ -88,24 +85,24 @@ while not over:
         prev_count+=1
 
 
-    # Charge le chunk suivant si nécessaire
+    # Loads the next chunk if needed
     if endOfChunk():
 
-        # On selectionne le prochain chunk à générer dans la liste des chunks
-        if chunk_num < len(niveau):
-            next_chunk = niveau[chunk_num]
+        # Selects the next chunk to be loaded in the chunk list
+        if chunk_num < len(level):
+            next_chunk = level[chunk_num]
             chunk_num += 1
 
-            # On trouve la coordonnée x où commencer la génération
+            # Getting the coordinate x from where to start the generation
             start_x = blocks[-1].rect.x + BLOCK_WIDTH
 
             levelGeneration(next_chunk, start_x)
 
-    # Affichage dans la fenetre
+    # Window dispay
     display()
 
 
-# Affichage du score dans la console
+# Displays the score in console
 score, count, secs = score(current_time)
 print('Score:', score)
 filename = "data"
