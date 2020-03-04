@@ -2,52 +2,15 @@
 
 ### Dependencies
 
+* python 3
 * pygame
+* pandas
 
 ### How to play
 
 ```sh
-$ python3 main.py "name" "mode"
+$ python3 main.py "name"
 ```
 
-* mode: normal or reverse
 * name: player's name
-
-### Experiment
-
-* Emmanuel and LC: normal game then reversed screen mode.
-
-**commands**
-
-*First experiment (during 7min)*
-
-```sh
-$ python3 main.py "name" normal
-```
-
-*Second experiment (during 7min)*
-
-Reverse the screen manually.
-
-```sh
-$ python3 main.py "name" reverse
-```
-
-* Dorian: revered screen mode then normal
-
-**commands**
-
-*First experiment (during 7min)*
-
-Reverse the screen manually.
-
-```sh
-$ python3 main.py "name" reverse
-```
-
-*Second experiment (during 7min)*
-
-```sh
-$ python3 main.py "name" normal
-```
 

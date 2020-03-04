@@ -9,20 +9,14 @@
 
 # IMPORTS
 import pygame
-from random import *
+import random as rd
 from pygame.locals import *
 import math
 import pandas as pd
 
 # IMPORTS DE FICHIERS
 from levels import *
-
-##############################
-######>> CHANGE HERE <<#######
-##############################
-invertCommand = "" # "reverse" or ""
-##############################
-##############################
+from configs import *
 
 
 """ TO DO LIST
@@ -59,7 +53,7 @@ class Block(object):
         """
         # Applies coordinates and sizes.
         self.rect = pygame.Rect(block_x, block_y, BLOCK_WIDTH, BLOCK_HEIGHT)
-        blocks.append(self) # Add it to the block list #TODO: remove the inside append
+        # blocks.append(self) # Add it to the block list #TODO: remove the inside append
         self.type = type
 
     def move(self, distance_x, distance_y):
@@ -80,7 +74,7 @@ class Player(object):
         self.vitesse_y = 0
 
 
-    def move(self):
+    def move(self, blocks):
 
         self.rect.x += self.vitesse_x
 
@@ -98,23 +92,23 @@ class Player(object):
             for Block in blocks:
                 Block.move (-self.vitesse_x, 0)
 
-        self.collisions(self.vitesse_x, 0)
+        self.collisions(self.vitesse_x, 0, blocks)
 
         self.rect.y += self.vitesse_y
-        self.collisions(0, self.vitesse_y)
+        self.collisions(0, self.vitesse_y, blocks)
 
 
-    def collisions(self, vitesse_x, vitesse_y):
+    def collisions(self, vitesse_x, vitesse_y, blocks):
 
         for Block in blocks:
             if self.rect.colliderect(Block.rect):
 
                 if vitesse_x > 0:
                     self.rect.right = Block.rect.left
-                    freinage()
+                    freinage(self, blocks)
                 elif vitesse_x < 0:
                     self.rect.left = Block.rect.right
-                    freinage()
+                    freinage(self, blocks)
 
                 if vitesse_y > 0:
                     self.rect.bottom = Block.rect.top
@@ -129,7 +123,7 @@ class Player(object):
 
 ### LEVEL GENERATION ### ----------------------
 
-def levelGeneration(chunk, x_start) :
+def levelGeneration(block_list, chunk, x_start) :
     """ Loads the chunk from the start coordinate.
 
     INPUTS: 
@@ -151,16 +145,16 @@ def levelGeneration(chunk, x_start) :
         for ligne in range(len(chunk)):
 
             if chunk[ligne][colonne] == "W":
-                Block(x,y)
+                block_list.append(Block(x,y))
             elif chunk[ligne][colonne] == "E":
-                Block(x,y, type="end")
+                block_list.append(Block(x,y, type="end"))
 
             y += BLOCK_HEIGHT # Goes downwards of one block
 
         x += BLOCK_WIDTH # Goes right of block
         y = (VISIBILITE_Y-1) * HAUTEUR_CHUNK * BLOCK_HEIGHT # Get back up
 
-def endOfChunk():
+def endOfChunk(blocks):
     """ Detects if the last block from the last chunk is on screen.
 
     OUTPUT: 
@@ -174,7 +168,7 @@ def endOfChunk():
 
 ### INTERACTIONS PERSONNAGE ### --------------------
 
-def bouge():
+def bouge(Perso, blocks):
     """ Detects pressed keys and changes speeds accordingly. 
     Then applies slowdowns.
     """
@@ -186,13 +180,13 @@ def bouge():
     # Left
     if k[TOUCHE_GAUCHE]:
         if Perso.vitesse_x > 0:
-            freinage()
+            freinage(Perso, blocks)
         else:
             Perso.vitesse_x -= ACCELERATION_X
     # Right
     elif k[TOUCHE_DROITE]:
         if Perso.vitesse_x < 0:
-            freinage()
+            freinage(Perso, blocks)
         else:
             Perso.vitesse_x += ACCELERATION_X
 
@@ -206,10 +200,10 @@ def bouge():
     # Vertical movements #
 
     # Gravity
-    if not sol():
+    if not sol(Perso, blocks):
         Perso.vitesse_y += ACCELERATION_Y
 
-    if k[TOUCHE_HAUT] and sol(): # Up
+    if k[TOUCHE_HAUT] and sol(Perso, blocks): # Up
         Perso.vitesse_y = -VITESSE_Y # - to go upwards
 
     # x speed limit
@@ -219,9 +213,9 @@ def bouge():
         Perso.vitesse_x = VITESSE_X
 
     # Applies speeds to the Player
-    Perso.move()
+    Perso.move(blocks)
 
-def freinage():
+def freinage(Perso, blocks):
     """
     """
 
@@ -229,7 +223,7 @@ def freinage():
     elif Perso.vitesse_x < 0 : Perso.vitesse_x = int(Perso.vitesse_x / FREINAGE_X)
     else : Perso.vitesse_x = int(Perso.vitesse_x / FREINAGE_X)
 
-def sol():
+def sol(Perso, blocks):
     """ Detects if a Block is under the Player
     """
     
@@ -243,7 +237,7 @@ def sol():
 
 ### WINDOW DISPLAY ### --------------------------
 
-def camera():
+def camera(Perso, blocks):
     """ Moves the camera.
     """
 
@@ -261,23 +255,23 @@ def camera():
 
         Perso.rect.x += VITESSE_CAMERA_X
 
-def display():
+def display(fenetre, blocks, Perso):
     """ Updates the display
     """
 
-    FENETRE.fill(GRIS) # background of FENETRE
+    fenetre.fill(GRIS) # background of FENETRE
 
     # Draws each Block
     for Block in blocks:
-        pygame.draw.rect(FENETRE, BLANC, Block.rect)
+        pygame.draw.rect(fenetre, BLANC, Block.rect)
 
-    pygame.draw.rect(FENETRE, ORANGE, Perso.rect) # draws the player
+    pygame.draw.rect(fenetre, ORANGE, Perso.rect) # draws the player
 
     ### Free space for object display ###
 
     pygame.display.update() # refreshes FENETRE
 
-def score(secs):
+def score_func(secs, Perso, blocks):
     """ Score according to speed (Block/sec) and distance traveled
     """
 
@@ -296,7 +290,7 @@ def score(secs):
 
 ### CSV SAVE ### --------------------------
 
-def save(filename, player_name, reversed_screen, score, count, secs, chunk_times, nb_chunks):
+def save(filename, player_name, score, count, secs, chunk_times, nb_chunks):
     """ Saves the player's score in a csv.
     """
 
@@ -310,8 +304,6 @@ def save(filename, player_name, reversed_screen, score, count, secs, chunk_times
         data = pd.DataFrame(columns=[
             'name',
             'attempt_n',
-            'reversed_screen',
-            'inverted_keys',
             'score',
             'count',
             'time'
@@ -322,8 +314,6 @@ def save(filename, player_name, reversed_screen, score, count, secs, chunk_times
     new_entry = {
         'name':player_name,
         'attempt_n':attempt_n,
-        'reversed_screen': reversed_screen,
-        'inverted_keys': True if invertCommand=='reverse' else False,
         'score':score,
         'count': count,
         'time': secs
@@ -345,81 +335,4 @@ def save(filename, player_name, reversed_screen, score, count, secs, chunk_times
 ##################| VARIABLES |#####################
 ####################################################
 
-# List of all the Blocks
-blocks = []
 
-chunk_lenght = 0 # unused at the moment
-
-
-
-###################################################
-##################| CONSTANTS |####################
-###################################################
-
-# Coefficient of Proportions (to increase physics proportionally)
-PROPORTION = 1
-
-# Size of blocks
-BLOCK_WIDTH  = 16 * PROPORTION
-BLOCK_HEIGHT = 16 * PROPORTION
-
-# For the display
-VISIBILITE_X = 45 # Width of FENETRE in amount of blocks.
-VISIBILITE_Y = 2 # Height of FENETRE in amount of chunk height.
-TAILLE_X = BLOCK_WIDTH * VISIBILITE_X # Width of FENETRE in pixels.
-TAILLE_Y = HAUTEUR_CHUNK * BLOCK_HEIGHT * VISIBILITE_Y # Height of FENETRE in pixels.
-
-# Player size
-Perso_WIDTH  = 1 * BLOCK_WIDTH
-Perso_HEIGHT = 2 * BLOCK_HEIGHT
-
-# Start
-START_X = 0
-START_Y = TAILLE_Y - BLOCK_HEIGHT - Perso_HEIGHT
-
-# Colours
-BLANC = (255, 255, 255)
-GRIS = (30,30,30)
-ORANGE = (255, 125, 0)
-ROUGE = (255, 0, 0)
-
-# Acceleration
-ACCELERATION_X = 1 * PROPORTION
-ACCELERATION_Y = 1.67 * PROPORTION
-COEFF_ACCELERATION_X = 1.3
-FREINAGE_X = COEFF_ACCELERATION_X * ACCELERATION_X
-# Speed
-VITESSE_X = 16 * PROPORTION # vitesse_x max
-VITESSE_Y = BLOCK_HEIGHT * (14/16) # vitesse_y max
-# Camera speed
-VITESSE_CAMERA_X = 80 * PROPORTION
-VITESSE_CAMERA_Y = 5 * PROPORTION
-
-# Init the Player
-Perso = Player()
-
-# Display Setup
-FENETRE = pygame.display.set_mode((TAILLE_X, # Dimensions of FENETRE
-                                   TAILLE_Y))
-
-# Time
-CLOCK = pygame.time.Clock()
-
-# Keys
-TOUCHE_DROITE = K_d
-TOUCHE_GAUCHE = K_q
-TOUCHE_HAUT   = K_z
-
-if invertCommand == "rot":
-    TOUCHE_DROITE = K_z
-    TOUCHE_GAUCHE = K_d
-    TOUCHE_HAUT   = K_q
-
-elif invertCommand == "reverse":
-    TOUCHE_DROITE = K_q
-    TOUCHE_GAUCHE = K_d
-    TOUCHE_HAUT   = K_z
-
-# Camera keys
-CAMERA_DROITE    = K_RIGHT
-CAMERA_GAUCHE    = K_LEFT
