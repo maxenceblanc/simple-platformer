@@ -2,9 +2,13 @@
 #-*- coding: utf-8 -*-
 
 
-# ############################
-# SET OF LEVELS MADE SPEEDRUNS
-# ############################
+# #################################
+# SET OF LEVELS MADE FOR SPEEDRUNS
+# #################################
+
+# ##################
+# Name : First Land
+# ##################
 
 init_1 = [
 "   ",
@@ -322,5 +326,5 @@ level.append(chunk_14) # 24.406, 24.184, 23.253
 
 
 
-HAUTEUR_CHUNK = 16 # in amount of blocks
-NBR_CHUNK = len(level)
+CHUNK_HEIGHT = 16 # in amount of blocks
+NB_CHUNK = len(level)

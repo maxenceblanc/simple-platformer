@@ -13,10 +13,17 @@ import pygame
 from pygame.locals import *
 
 # EXTRA FILES
-from fonctions import *
+from functions import *
 from configs import *
 
-
+""" TODO
+TAS system (log + custom start)
+Replay system
+Code cleaning (english to french)
+Time stamp system cleaning (start on key press) 
+Score refactoring
+Scoreboard system (best time, bt per chunck)
+"""
 
 
 
@@ -30,34 +37,34 @@ pygame.display.set_caption("simple platformer") # sets the window's title
 
 
 def main(random_gen, player_name):
-    """ Main function.
+    """ Main function. Contains the main loop of the game.
 
     INPUTS: 
-    OUTPUT: 
+            if True, toggles random generation (bool)
+            name of the player (str)
     """
 
     # List of all the Blocks
     blocks = []
 
-
-    # Init the Player
-    Perso = Player()
+    # Init the player
+    player = Player()
 
     # Display Setup
-    FENETRE = pygame.display.set_mode((TAILLE_X, # Dimensions of FENETRE
-                                    TAILLE_Y))
+    WINDOW = pygame.display.set_mode((SIZE_X, # Dimensions of WINDOW
+                                    SIZE_Y))
 
     # Time
     CLOCK = pygame.time.Clock()
 
-    # Inits
+    # Inits TODO: explain variables
     chunk_num = 1
     prev_count = 0
 
     chunk_times = []
     last_time = 0
 
-    # Loads the first chunk
+    # Loads the first chunk of the map
     levelGeneration(blocks, level[0], 0)
 
     over = False
@@ -73,19 +80,19 @@ def main(random_gen, player_name):
             if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
                 over = True
 
-        if Perso.rect.y + Perso_HEIGHT > TAILLE_Y:
+        if player.rect.y + PLAYER_HEIGHT > SIZE_Y:
             over = True
 
         # Moves the camera if needed
-        camera(Perso, blocks)
+        camera(player, blocks)
 
-        # Moves the Player
-        bouge(Perso, blocks)
+        # Moves the player
+        move(player, blocks)
 
         # Not very viable but works for that list length
         count = 0
         for block in blocks:
-            if block.type == "end" and block.rect.x < Perso.rect.x:
+            if block.type == "end" and block.rect.x < player.rect.x:
                 count+=1
         
         if count == prev_count + 1:
@@ -121,14 +128,14 @@ def main(random_gen, player_name):
 
                     levelGeneration(blocks, next_chunk, start_x)
 
-        display(FENETRE, blocks, Perso) # Window dispay
+        display(WINDOW, blocks, player) # Window dispay
 
 
     # Displays the score in console
-    score, count, secs = score_func(current_time, Perso, blocks)
+    score, count, secs = score_func(current_time, player, blocks)
     print('Score:', score)
     filename = "data"
-    save(filename, player_name, score, count, secs, chunk_times, NBR_CHUNK)
+    save(filename, player_name, score, count, secs, chunk_times, NB_CHUNK)
     
 
 
@@ -151,4 +158,4 @@ if __name__ == "__main__":
     main(random_gen, player_name)
 
     pygame.quit()
-    quit
+    quit()
