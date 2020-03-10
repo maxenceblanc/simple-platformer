@@ -9,7 +9,7 @@
 ### How to play
 
 ```sh
-$ python3 main.py "name"
+$ python3 main.py name
 ```
 
 * name: player's name

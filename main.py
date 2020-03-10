@@ -86,6 +86,10 @@ def main(random_gen, player_name):
         # Moves the camera if needed
         camera(player, blocks)
 
+        # Moves the player when m1 is on click
+        if pygame.mouse.get_pressed()[0]:
+            mouse(player)
+
         # Moves the player
         move(player, blocks)
 

@@ -289,6 +289,18 @@ def camera(player, blocks):
 
         player.rect.x += SPEED_CAMERA_X
 
+
+def mouse(player):
+    """ Uses mouse position to set the player's position
+
+    INPUTS: 
+            player object
+    """
+    
+    player.rect.x, player.rect.y = pygame.mouse.get_pos()
+    player.speed_x, player.speed_y = 0, 0
+    
+
 def display(window, blocks, player):
     """ Updates the display.
 
