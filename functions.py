@@ -137,10 +137,11 @@ class Player(object):
 ####################################################
 ##################| FONCTIONS |#####################
 ####################################################
+    
 
 ### LEVEL GENERATION ### ----------------------
 
-def levelGeneration(block_list, chunk, x_start) :
+def loadChunk(block_list, chunk, x_start) :
     """ Loads the chunk from the start coordinate.
 
     INPUTS: 
@@ -182,6 +183,46 @@ def endOfChunk(blocks):
     """
 
     return blocks[-1].rect.x < SIZE_X
+
+def levelGeneration(isRandom, blocks, level, chunk_num=None):
+    """ Handles the level generation, loads a chunk if needed.
+
+    INPUTS: 
+            True if the generation must choose next chunk randomly
+            the list of all the blocks
+            the chunk list
+            amount of chunks already loaded
+    OUTPUT: 
+            True if a chunk has been loaded, False otherwise
+    """
+
+    # Loads the next chunk if needed
+    if endOfChunk(blocks):
+
+        # Getting the coordinate x from where to start the generation
+        start_x = blocks[-1].rect.x + BLOCK_WIDTH
+
+        # Random generation
+        if isRandom: 
+
+            # Next chunk is chosen at random
+            next_chunk = level[rd.randint(0, len(level)-1)]
+
+            loadChunk(blocks, next_chunk, start_x)
+            return True
+
+        # Sequential generation
+        elif chunk_num < len(level): 
+
+            # Selects the next chunk to be loaded in the chunk list
+            next_chunk = level[chunk_num]
+
+            loadChunk(blocks, next_chunk, start_x)
+            return True
+        
+            
+    return False
+    
 
 ### PLAYER ACTIONS ### --------------------
 
@@ -243,7 +284,7 @@ def slowdown(player):
             player object
     """
 
-    if 1 > player.speed_x / SLOWDOWN__X > -1 : # TODO: there is a function in python for that
+    if 1 > player.speed_x / SLOWDOWN__X > -1 :
         player.speed_x = 0
 
     else: 
@@ -289,7 +330,6 @@ def camera(player, blocks):
 
         player.rect.x += SPEED_CAMERA_X
 
-
 def mouse(player):
     """ Uses mouse position to set the player's position
 
@@ -300,7 +340,6 @@ def mouse(player):
     player.rect.x, player.rect.y = pygame.mouse.get_pos()
     player.speed_x, player.speed_y = 0, 0
     
-
 def display(window, blocks, player):
     """ Updates the display.
 
@@ -323,36 +362,42 @@ def display(window, blocks, player):
     # Refreshes the window
     pygame.display.update() 
 
+
+
 ### SCORE CALCULATIONS ### --------------------------
 
-def score_func(secs, player, blocks):
+def score_func(time, player, blocks):
     """ Score according to speed (block/sec) and distance traveled.
 
     INPUTS:
-            TODO
+            the time in seconds spent in the run
             the player object
             the list of blocks from the level
     """
 
-    count = 0
-
+    # Count the amount of chunks passed
+    chunks_passed = 0
     for block in blocks:
         if block.type == "end" and block.rect.x < player.rect.x:
-            count+=1
+            chunks_passed += 1
 
-    final = pygame.time.get_ticks() / 1000
-    pos_weight = 2.5
-    spe_weight = 1
-    score = count*pos_weight + ((count*20)/secs**1.5)*spe_weight
-    print('Chunk nb:', count, 'Time:', final)
-    return(round(score,1), count, final)
+    # Score formula
+    pos_weight   = 2.5
+    speed_weight = 1
+    score = chunks_passed*pos_weight + ((chunks_passed*20)/time**1.5)*speed_weight
+
+    return(round(score,1), chunks_passed, time)
+
+
 
 ### CSV SAVE ### --------------------------
 
 def save(filename, player_name, score, count, secs, chunk_times, nb_chunks):
     """ Saves the player's score in a csv.
 
-    TODO: Fix a bug where numbers in the save file for previous runs get very long.
+    BUG: Fix a bug where numbers in the save file for previous runs get very long.
+    #BUG: attempt_n is just calculating the amount of previous attempts, not using 
+    #   the last attempt number of the player, this could make duplicates
 
     INPUTS:
             TODO
@@ -372,7 +417,7 @@ def save(filename, player_name, score, count, secs, chunk_times, nb_chunks):
                                      'time'
                                      ]+['chunk_'+str(i) for i in range(1,nb_chunks+1)])
 
-    attempt_n = data[data.name==player_name].shape[0]+1
+    attempt_n = data[data.name==player_name].shape[0]+1 # TODO: change to find highest attempt digit?
 
     # creates new entry
     new_entry = {
