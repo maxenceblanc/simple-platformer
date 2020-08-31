@@ -17,7 +17,13 @@ import levels.levels as levels
 ################################
 
 RANDOM_GEN = False  # Toggles random generation
-CAN_LOSE = True # Disables losing, for dev/testing purposes
+CAN_LOSE = True # False: Disables losing, for dev/testing purposes
+
+# "play"  "dev"  "debug"  "tas"
+APP_MODE = "dev" # Not used yet
+
+
+MAP_NAME = levels.NAME
 
 # Coefficient of Proportions (to increase physics proportionally)
 PROPORTION = 1
@@ -63,6 +69,9 @@ SPEED_CAMERA_X = 80 * PROPORTION
 KEY_RIGHT = K_d
 KEY_LEFT  = K_q
 KEY_UP    = K_z
+
+KEY_RECORD = K_o
+KEY_LOAD   = K_p
 
 # Camera keys
 CAMERA_RIGHT   = K_RIGHT

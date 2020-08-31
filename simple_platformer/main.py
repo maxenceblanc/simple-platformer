@@ -13,15 +13,21 @@ import sys
 import pygame
 from pygame.locals import *
 
-# EXTRA FILES
+# CUSTOM IMPORTS
 import game_config as cfg
 import config
-import functions
 import levels.levels as levels
+
+import functions
 import entities.Player
+
+import save_system
+import recording_system
+
 
 """ TODO
 Score refactoring
+Add date to run data
 TAS system (log + custom start)
 Replay system
 Scoreboard system (best time, bt per chunck)
@@ -29,159 +35,150 @@ training mode with options (like no death, mouse etc.)
 """
 
 
+class Game():
 
-# Initializes pygame
-pygame.init()
-
-# Display Setup
-pygame.display.set_caption("simple platformer") # sets the window's title
+    def __init__(self, random_gen, can_lose, player_name):
 
 
-### SETUP ### ---------------------- 
+        self.random_gen = random_gen
+        self.can_lose   = can_lose
 
-def idleLoop(random_gen, blocks, chunk_num, WINDOW, player):
-    """ Used this to wait for the user input to start time but still picture the level.
-    That allows for time to start when the user presses a key rather than when 
-    program starts.
+        self.player_name = player_name
+        
+        # List of all the Blocks
+        self.blocks = []
 
-    INPUTS: 
-            if True, toggles random generation (bool)
-            the list of all the blocks
-            amount of chunks already loaded
-            Window object
-            player object
+        # Init the player
+        self.player = entities.Player.Player()
 
-    OUTPUT:
-            amount of chunks already loaded
-    """
-    ready = False # True when all chunks that should be visible are loaded
-    start = False
-    while not start:
+        
+        # Inits TODO: explain variables
+        self.chunk_num = 1 # 1 because of the init chunk
+        self.prev_chunks_passed = 0
 
-        for e in pygame.event.get():
-            pygame.event.set_allowed(None)
-            pygame.event.set_allowed((QUIT, MOUSEBUTTONDOWN, KEYDOWN))
-            pygame.event.pump()
+        self.chunk_times = []
+        self.last_time = 0
 
-        key = pygame.key.get_pressed()
-
-        if key[cfg.KEY_LEFT] or key[cfg.KEY_RIGHT] or key[cfg.KEY_UP]:
-            if pygame.time.get_ticks() / 1000 > 0.5: # Arbitrary, used to wait for the game to be fully loaded
-                start = True
-
-        # Loads the next chunk if needed
-        chunkWasLoaded = functions.levelGeneration(random_gen, blocks, levels.level, chunk_num)
-
-        if chunkWasLoaded:
-            chunk_num += 1
-        elif not ready:
-            print("ready")
-            ready = True
-
-        functions.display(WINDOW, blocks, player) # Window dispay
-
-    return chunk_num
+    
+    def __repr__(self):
+        pass
 
 
-### MAIN ----------------------
+    def idleLoop(self, WINDOW):
+        """ Used this to wait for the user input to start time but still picture the level.
+        That allows for time to start when the user presses a key rather than when 
+        program starts.
+        """
 
-def main(random_gen, canLose, player_name):
-    """ Main function. Contains the main loop of the game.
+        ready = False # True when all chunks that should be visible are loaded
+        start = False
 
-    INPUTS: 
-            if True, toggles random generation (bool)
-            name of the player (str)
-    """
+        while not start:
 
-    # List of all the Blocks
-    blocks = []
+            for e in pygame.event.get():
+                pygame.event.set_allowed(None)
+                pygame.event.set_allowed((QUIT, MOUSEBUTTONDOWN, KEYDOWN))
+                pygame.event.pump()
 
-    # Init the player
-    player = entities.Player.Player()
+            key = pygame.key.get_pressed()
 
-    # Display Setup
-    WINDOW = pygame.display.set_mode((cfg.SIZE_X, # Dimensions of WINDOW
-                                      cfg.SIZE_Y))
+            if key[cfg.KEY_LEFT] or key[cfg.KEY_RIGHT] or key[cfg.KEY_UP]:
+                if pygame.time.get_ticks() / 1000 > 0.5: # Arbitrary, used to wait for the game to be fully loaded
+                    start = True
 
-    # Time
-    CLOCK = pygame.time.Clock()
+            # Loads the next chunk if needed
+            chunkWasLoaded = functions.levelGeneration(self.random_gen, self.blocks, levels.level, self.chunk_num)
 
-    # Inits TODO: explain variables
-    chunk_num = 1 # 1 because of the init chunk
-    prev_chunks_passed = 0
+            if chunkWasLoaded:
+                self.chunk_num += 1
+            elif not ready:
+                print("ready")
+                ready = True
 
-    chunk_times = []
-    last_time = 0
-
-    # Loads the first chunk of the map
-    functions.loadChunk(blocks, levels.level[0], 0)
-
-    # Idle screen
-    # Using this to wait for the user input to start time but still picture the level
-    chunk_num = idleLoop(random_gen, blocks, chunk_num, WINDOW, player)
-
-    start_time = pygame.time.get_ticks() / 1000
+            functions.display(WINDOW, self.blocks, self.player) # Window dispay
 
 
-    # Main loop
-    over = False
-    while not over:
+    def main(self, WINDOWn, CLOCK):
+        """ Main function. Contains the main loop of the game.
 
-        CLOCK.tick(20) # 20 FPS
+        """
 
-        for e in pygame.event.get():
-            pygame.event.set_allowed(None)
-            pygame.event.set_allowed((QUIT, MOUSEBUTTONDOWN, KEYDOWN))
-            pygame.event.pump()
+        # Loads the first chunk of the map
+        functions.loadChunk(self.blocks, levels.level[0], 0)
 
-            if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
+        # Idle screen
+        # Using this to wait for the user input to start time but still picture the level
+        self.idleLoop(WINDOW)
+
+        self.start_time = pygame.time.get_ticks() / 1000
+
+
+        # Main loop
+        over = False
+        while not over:
+
+            CLOCK.tick(20) # 20 FPS
+
+            for e in pygame.event.get():
+                pygame.event.set_allowed(None)
+                pygame.event.set_allowed((QUIT, MOUSEBUTTONDOWN, KEYDOWN))
+                pygame.event.pump()
+
+                if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
+                    over = True
+                
+                if e.type == KEYDOWN and e.key == cfg.KEY_RECORD:
+                    functions.record(self)
+
+                if e.type == KEYDOWN and e.key == cfg.KEY_LOAD:
+                    self = recording_system.loadState("demo_2020-08-31_17-23-33_GMT_test_First-Land.txt")
+
+            if self.player.rect.y + cfg.PLAYER_HEIGHT > cfg.SIZE_Y and self.can_lose:
                 over = True
 
-        if player.rect.y + cfg.PLAYER_HEIGHT > cfg.SIZE_Y and canLose:
-            over = True
+            # Moves the camera if needed
+            functions.camera(self.player, self.blocks)
 
-        # Moves the camera if needed
-        functions.camera(player, blocks)
+            # Moves the player when m1 is on click
+            if pygame.mouse.get_pressed()[0]:
+                functions.mouse(self.player)
 
-        # Moves the player when m1 is on click
-        if pygame.mouse.get_pressed()[0]:
-            functions.mouse(player)
+            # Moves the player
+            functions.move(self.player, self.blocks)
 
-        # Moves the player
-        functions.move(player, blocks)
+            # Not very viable but works for that list length
+            chunks_passed = 0
+            for block in self.blocks:
+                if block.type == "end" and block.rect.x < self.player.rect.x:
+                    chunks_passed+=1
+            
+            if chunks_passed == self.prev_chunks_passed + 1:
+                self.current_time = pygame.time.get_ticks() / 1000 - self.start_time
+                print("chunk n°", chunks_passed, ": ", self.current_time)
 
-        # Not very viable but works for that list length
-        chunks_passed = 0
-        for block in blocks:
-            if block.type == "end" and block.rect.x < player.rect.x:
-                chunks_passed+=1
-        
-        if chunks_passed == prev_chunks_passed + 1:
-            current_time = pygame.time.get_ticks() / 1000 - start_time
-            print("chunk n°", chunks_passed, ": ", current_time)
-
-            chunk_times.append(round(current_time-last_time, 3))
-            last_time = current_time
-            prev_chunks_passed+=1
+                self.chunk_times.append(round(self.current_time-self.last_time, 3))
+                self.last_time = self.current_time
+                self.prev_chunks_passed+=1
 
 
-        # Loads the next chunk if needed
-        chunkWasLoaded = functions.levelGeneration(random_gen, blocks, levels.level, chunk_num)
+            # Loads the next chunk if needed
+            chunkWasLoaded = functions.levelGeneration(self.random_gen, self.blocks, levels.level, self.chunk_num)
 
-        if chunkWasLoaded:
-            chunk_num += 1
+            if chunkWasLoaded:
+                self.chunk_num += 1
 
-        functions.display(WINDOW, blocks, player) # Window dispay
+            functions.display(WINDOW, self.blocks, self.player) # Window dispay
 
 
-    # Displays the score in console
-    score, chunks_passed, end_time = functions.score_func(current_time, player, blocks)
-    print('Chunk nb:', chunks_passed, 'Time:', end_time)
-    print('Score:', score)
+        # Displays the score in console
+        score, chunks_passed, end_time = functions.score_func(self.current_time, self.player, self.blocks)
+        print('Chunk nb:', chunks_passed, 'Time:', end_time)
+        print('Score:', score)
 
-    # Saving
-    filename = os.path.join(config.DATA_FOLDER, config.DATA_FILE)
-    functions.save(filename, player_name, score, chunks_passed, end_time, chunk_times, levels.NB_CHUNK)
+        # Saving
+        filename = os.path.join(config.DATA_FOLDER, config.DATA_FILE)
+        save_system.save(filename, self.player_name, score, chunks_passed, end_time, self.chunk_times, levels.NB_CHUNK)
+
 
 
 
@@ -199,10 +196,22 @@ if __name__ == "__main__":
 
     # Additional options
     random_gen = cfg.RANDOM_GEN
-    canLose = cfg.CAN_LOSE
+    can_lose = cfg.CAN_LOSE
 
 
-    main(random_gen, canLose, player_name)
+    # Initializes pygame
+    pygame.init()
+
+    # Time
+    CLOCK = pygame.time.Clock()
+
+    # Display Setup
+    pygame.display.set_caption("simple platformer") # sets the window's title
+    WINDOW = pygame.display.set_mode((cfg.SIZE_X, # Dimensions of WINDOW
+                                      cfg.SIZE_Y))
+
+    game = Game(random_gen, can_lose, player_name)
+    game.main(WINDOW, CLOCK)
 
     pygame.quit()
     quit()

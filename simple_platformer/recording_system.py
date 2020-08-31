@@ -8,12 +8,15 @@
 
 # IMPORTS
 import sys
+import os
+import time
 
 import pickle
 
-# FILE IMPORTS
 
-# Sub-modules
+# CUSTOM IMPORTS
+import config
+
 
 
 ############################################
@@ -40,14 +43,46 @@ import pickle
 
 ### Recording System ### --------------------
 
-def saveState():
+def serializeState(game):
     """ Saves the current state of the game. This is to be able to replicate
     states in a replay system.
 
     TODO
     """
 
-    pass
+    game_state_serialized = pickle.dumps(game)
+
+    return game_state_serialized
+    
+
+def saveDemo(demo, player_name, map_name):
+    """ Saves all the demo data into a file of the demo folder.
+    
+    TODO
+    """
+
+    t = time.gmtime()
+    current_time = time.strftime('%Y-%m-%d_%H-%M-%S_%Z', t)
+
+    name_list = [config.DEMO_PREFIX, current_time, player_name, map_name]
+    name_list = [elt.replace(" ", "-") for elt in name_list]
+    
+    filename = "_".join(name_list) + ".txt"
+    file_path = os.path.join(config.DEMO_FOLDER, filename)
+
+    print(f"saved demo to {file_path}")
+
+    with open(file_path, "wb") as demo_file:
+        demo_file.write(demo)
+
+
+
+def loadState(filename):
+
+    with open(os.path.join(config.DEMO_FOLDER, filename), "rb") as demo_file: # "b" for byte
+        game = pickle.load(demo_file)
+
+    return game
 
 ####################################################
 ##################| VARIABLES |#####################
@@ -64,5 +99,5 @@ def saveState():
 ####################################################
 
 if __name__ == "__main__" :
-    pass
+    saveDemo("", "max", "First Land")
     

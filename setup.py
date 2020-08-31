@@ -5,14 +5,14 @@ import os
 
 import simple_platformer.config
 
-# Create data folder
-data_folder = simple_platformer.config.DATA_FOLDER
-try:
-    os.mkdir(data_folder)
-except OSError:
-    print ("Creation of the directory %s failed" % data_folder)
-else:
-    print ("Successfully created the directory %s " % data_folder)
+# Create folders
+for folder in [simple_platformer.config.DATA_FOLDER, simple_platformer.config.DEMO_FOLDER]:
+    try:
+        os.mkdir(folder)
+    except OSError:
+        print ("Creation of the directory %s failed" % folder)
+    else:
+        print ("Created %s folder" % folder)
 
 # Installer for python dependecies?
 # TODO
