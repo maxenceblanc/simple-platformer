@@ -9,8 +9,24 @@
 
 from pygame.locals import *
 
-from levels import *
+import levels.levels as levels
 
+###############################
+###### APP CONFIGURATION ######
+###############################
+
+# Folder for run's data files
+DATA_FOLDER = "data"
+DATA_FILE = "data"
+
+RANDOM_GEN = False  # Toggles random generation
+CAN_LOSE = True # Disables losing, for dev/testing purposes
+
+
+
+################################
+###### GAME CONFIGURATION ######
+################################
 
 # Coefficient of Proportions (to increase physics proportionally)
 PROPORTION = 1
@@ -23,7 +39,7 @@ BLOCK_HEIGHT = 16 * PROPORTION
 VISIBILITY_X = 45 # Width of WINDOW in amount of blocks.
 VISIBILITY_Y = 2 # Height of WINDOW in amount of chunk height.
 SIZE_X = BLOCK_WIDTH * VISIBILITY_X # Width of WINDOW in pixels.
-SIZE_Y = CHUNK_HEIGHT * BLOCK_HEIGHT * VISIBILITY_Y # Height of WINDOW in pixels.
+SIZE_Y = levels.CHUNK_HEIGHT * BLOCK_HEIGHT * VISIBILITY_Y # Height of WINDOW in pixels.
 
 # Player size
 PLAYER_WIDTH  = 1 * BLOCK_WIDTH

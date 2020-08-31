@@ -15,8 +15,10 @@ import math
 import pandas as pd
 
 # IMPORTS DE FICHIERS
-from levels import *
-from configs import *
+import levels.levels as levels
+import config as cfg
+import entities.Block
+
 
 
 """ TO DO LIST
@@ -42,97 +44,6 @@ v (y)
 ###################| CLASSES |######################
 ####################################################
 
-class Block():
-    """ block entity.
-
-        INPUTS: 
-                x coordinate
-                y coordinate
-                type of the block (str)
-        """
-
-    def __init__(self, block_x, block_y, type='default'):
-        
-        # Applies coordinates and sizes.
-        self.rect = pygame.Rect(block_x, block_y, BLOCK_WIDTH, BLOCK_HEIGHT)
-
-        # Sets block attributes
-        self.type = type
-
-    def move(self, distance_x, distance_y):
-        """ Moves the blocks relatively.
-
-        INPUTS: 
-                distance in x
-                distance in y
-        """
-        self.rect.x += distance_x
-        self.rect.y += distance_y
-
-class Player(object):
-    """ Player entity.
-    """
-
-    def __init__(self):
-        self.rect = pygame.Rect(START_X, START_Y, PLAYER_WIDTH, PLAYER_HEIGHT)
-        self.speed_x = 0
-        self.speed_y = 0
-
-
-    def move(self, blocks):
-        """ Moves the player.
-        
-        INPUTS: 
-                list of blocks from the level.
-        """
-
-        self.rect.x += self.speed_x
-
-        # Correcting not to get past the middle of the screen
-        if self.rect.x > SIZE_X/2:
-            self.rect.x = SIZE_X/2
-
-        # Correcting not to get past the left side of the screen
-        if self.rect.x < 0:
-            self.rect.x = 0
-            self.speed_x = 0
-
-        # Moves the level when the Player reaches the middle of the screen
-        if self.rect.x == SIZE_X/2 and self.speed_x > 0:
-            for block in blocks:
-                block.move (-self.speed_x, 0)
-
-        self.collisions(self.speed_x, 0, blocks)
-
-        self.rect.y += self.speed_y
-        self.collisions(0, self.speed_y, blocks)
-
-
-    def collisions(self, speed_x, speed_y, blocks):
-        """ Handling of collisions when moving the player.
-        
-        INPUTS: 
-                speed in x
-                speed in y
-                list of blocks from the level
-        """
-
-        for block in blocks:
-            if self.rect.colliderect(block.rect):
-
-                if speed_x > 0:
-                    self.rect.right = block.rect.left
-                    slowdown(self)
-                elif speed_x < 0:
-                    self.rect.left = block.rect.right
-                    slowdown(self)
-
-                if speed_y > 0:
-                    self.rect.bottom = block.rect.top
-                    self.speed_y = 0
-                elif speed_y < 0:
-                    self.rect.top = block.rect.bottom
-                    self.speed_y = 0
 
 ####################################################
 ##################| FONCTIONS |#####################
@@ -155,7 +66,7 @@ def loadChunk(block_list, chunk, x_start) :
     """
 
     # Sets the star of the player for the generation.
-    x, y = x_start, (VISIBILITY_Y-1) * CHUNK_HEIGHT * BLOCK_HEIGHT
+    x, y = x_start, (cfg.VISIBILITY_Y-1) * levels.CHUNK_HEIGHT * cfg.BLOCK_HEIGHT
 
 
     # Generation
@@ -164,14 +75,14 @@ def loadChunk(block_list, chunk, x_start) :
         for row in range(len(chunk)):
 
             if chunk[row][column] == "W":
-                block_list.append(Block(x,y))
+                block_list.append(entities.Block.Block(x,y))
             elif chunk[row][column] == "E":
-                block_list.append(Block(x,y, type="end"))
+                block_list.append(entities.Block.Block(x,y, type="end"))
 
-            y += BLOCK_HEIGHT # Goes downwards of one block
+            y += cfg.BLOCK_HEIGHT # Goes downwards of one block
 
-        x += BLOCK_WIDTH # Goes right of block
-        y = (VISIBILITY_Y-1) * CHUNK_HEIGHT * BLOCK_HEIGHT # Get back up
+        x += cfg.BLOCK_WIDTH # Goes right of block
+        y = (cfg.VISIBILITY_Y-1) * levels.CHUNK_HEIGHT * cfg.BLOCK_HEIGHT # Get back up
 
 def endOfChunk(blocks):
     """ Detects if the last block of the last chunk is on screen.
@@ -182,7 +93,7 @@ def endOfChunk(blocks):
             True if last block is on screen, False otherwise
     """
 
-    return blocks[-1].rect.x < SIZE_X
+    return blocks[-1].rect.x < cfg.SIZE_X
 
 def levelGeneration(isRandom, blocks, level, chunk_num=None):
     """ Handles the level generation, loads a chunk if needed.
@@ -200,7 +111,7 @@ def levelGeneration(isRandom, blocks, level, chunk_num=None):
     if endOfChunk(blocks):
 
         # Getting the coordinate x from where to start the generation
-        start_x = blocks[-1].rect.x + BLOCK_WIDTH
+        start_x = blocks[-1].rect.x + cfg.BLOCK_WIDTH
 
         # Random generation
         if isRandom: 
@@ -240,17 +151,17 @@ def move(player, blocks):
     # Horizontal movements #
 
     # Left
-    if key[KEY_LEFT]:
+    if key[cfg.KEY_LEFT]:
         if player.speed_x > 0:
-            slowdown(player)
+            player.slowdown()
         else:
-            player.speed_x -= ACCELERATION_X
+            player.speed_x -= cfg.ACCELERATION_X
     # Right
-    elif key[KEY_RIGHT]:
+    elif key[cfg.KEY_RIGHT]:
         if player.speed_x < 0:
-            slowdown(player)
+            player.slowdown()
         else:
-            player.speed_x += ACCELERATION_X
+            player.speed_x += cfg.ACCELERATION_X
 
     # Gentle slowdowns if L/R keys aren't in use
     else:
@@ -263,32 +174,19 @@ def move(player, blocks):
 
     # Gravity
     if not ground(player, blocks):
-        player.speed_y += ACCELERATION_Y
+        player.speed_y += cfg.ACCELERATION_Y
 
-    if key[KEY_UP] and ground(player, blocks): # Up
-        player.speed_y = -SPEED_Y # - to go upwards
+    if key[cfg.KEY_UP] and ground(player, blocks): # Up
+        player.speed_y = -cfg.SPEED_Y # - to go upwards
 
     # x speed limit
-    if player.speed_x < -SPEED_X:
-        player.speed_x = -SPEED_X
-    elif player.speed_x > SPEED_X:
-        player.speed_x = SPEED_X
+    if player.speed_x < -cfg.SPEED_X:
+        player.speed_x = -cfg.SPEED_X
+    elif player.speed_x > cfg.SPEED_X:
+        player.speed_x = cfg.SPEED_X
 
     # Applies speeds to the Player
     player.move(blocks)
-
-def slowdown(player):
-    """ Slows the player down.
-
-    INPUTS:
-            player object
-    """
-
-    if 1 > player.speed_x / SLOWDOWN__X > -1 :
-        player.speed_x = 0
-
-    else: 
-        player.speed_x = int(player.speed_x / SLOWDOWN__X)
 
 def ground(player, blocks):
     """ Detects if a block is under the Player.
@@ -299,11 +197,10 @@ def ground(player, blocks):
     """
     
     for block in blocks:
-        for pixel in range(-(BLOCK_WIDTH-1),BLOCK_WIDTH):
+        for pixel in range(-(cfg.BLOCK_WIDTH-1),cfg.BLOCK_WIDTH):
             if player.rect.bottom == block.rect.top and player.rect.left == block.rect.left + pixel:
                 return True
     return False
-
 
 
 ### WINDOW DISPLAY ### --------------------------
@@ -318,17 +215,17 @@ def camera(player, blocks):
 
     key = pygame.key.get_pressed()
 
-    if key[CAMERA_RIGHT]:
+    if key[cfg.CAMERA_RIGHT]:
         for block in blocks:
-            block.move(-SPEED_CAMERA_X, 0)
+            block.move(-cfg.SPEED_CAMERA_X, 0)
 
-        player.rect.x -= SPEED_CAMERA_X
+        player.rect.x -= cfg.SPEED_CAMERA_X
 
-    elif key[CAMERA_LEFT]:
+    elif key[cfg.CAMERA_LEFT]:
         for block in blocks:
-            block.move(SPEED_CAMERA_X, 0)
+            block.move(cfg.SPEED_CAMERA_X, 0)
 
-        player.rect.x += SPEED_CAMERA_X
+        player.rect.x += cfg.SPEED_CAMERA_X
 
 def mouse(player):
     """ Uses mouse position to set the player's position
@@ -350,17 +247,19 @@ def display(window, blocks, player):
     """
 
     # Draws the background
-    window.fill(GREY) 
+    window.fill(cfg.GREY) 
 
     # Draws each block
     for block in blocks:
-        pygame.draw.rect(window, WHITE, block.rect)
+        pygame.draw.rect(window, cfg.WHITE, block.rect)
 
     # Draws the player
-    pygame.draw.rect(window, ORANGE, player.rect) 
+    pygame.draw.rect(window, cfg.ORANGE, player.rect) 
 
     # Refreshes the window
-    pygame.display.update() 
+    pygame.display.update()
+
+    print(player.speed_x)
 
 
 

@@ -8,16 +8,18 @@
 ########################
 
 # IMPORTS
+import os
 import sys
 import pygame
 from pygame.locals import *
 
 # EXTRA FILES
-from functions import *
-from configs import *
+import config as cfg
+import functions
+import levels.levels as levels
+import entities.Player
 
 """ TODO
-Code cleaning (french to english)
 Score refactoring
 TAS system (log + custom start)
 Replay system
@@ -62,12 +64,12 @@ def idleLoop(random_gen, blocks, chunk_num, WINDOW, player):
 
         key = pygame.key.get_pressed()
 
-        if key[KEY_LEFT] or key[KEY_RIGHT] or key[KEY_UP]:
+        if key[cfg.KEY_LEFT] or key[cfg.KEY_RIGHT] or key[cfg.KEY_UP]:
             if pygame.time.get_ticks() / 1000 > 0.5: # Arbitrary, used to wait for the game to be fully loaded
                 start = True
 
         # Loads the next chunk if needed
-        chunkWasLoaded = levelGeneration(random_gen, blocks, level, chunk_num)
+        chunkWasLoaded = functions.levelGeneration(random_gen, blocks, levels.level, chunk_num)
 
         if chunkWasLoaded:
             chunk_num += 1
@@ -75,7 +77,7 @@ def idleLoop(random_gen, blocks, chunk_num, WINDOW, player):
             print("ready")
             ready = True
 
-        display(WINDOW, blocks, player) # Window dispay
+        functions.display(WINDOW, blocks, player) # Window dispay
 
     return chunk_num
 
@@ -94,11 +96,11 @@ def main(random_gen, canLose, player_name):
     blocks = []
 
     # Init the player
-    player = Player()
+    player = entities.Player.Player()
 
     # Display Setup
-    WINDOW = pygame.display.set_mode((SIZE_X, # Dimensions of WINDOW
-                                      SIZE_Y))
+    WINDOW = pygame.display.set_mode((cfg.SIZE_X, # Dimensions of WINDOW
+                                      cfg.SIZE_Y))
 
     # Time
     CLOCK = pygame.time.Clock()
@@ -111,7 +113,7 @@ def main(random_gen, canLose, player_name):
     last_time = 0
 
     # Loads the first chunk of the map
-    loadChunk(blocks, level[0], 0)
+    functions.loadChunk(blocks, levels.level[0], 0)
 
     # Idle screen
     # Using this to wait for the user input to start time but still picture the level
@@ -134,18 +136,18 @@ def main(random_gen, canLose, player_name):
             if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
                 over = True
 
-        if player.rect.y + PLAYER_HEIGHT > SIZE_Y and canLose:
+        if player.rect.y + cfg.PLAYER_HEIGHT > cfg.SIZE_Y and canLose:
             over = True
 
         # Moves the camera if needed
-        camera(player, blocks)
+        functions.camera(player, blocks)
 
         # Moves the player when m1 is on click
         if pygame.mouse.get_pressed()[0]:
-            mouse(player)
+            functions.mouse(player)
 
         # Moves the player
-        move(player, blocks)
+        functions.move(player, blocks)
 
         # Not very viable but works for that list length
         chunks_passed = 0
@@ -163,40 +165,40 @@ def main(random_gen, canLose, player_name):
 
 
         # Loads the next chunk if needed
-        chunkWasLoaded = levelGeneration(random_gen, blocks, level, chunk_num)
+        chunkWasLoaded = functions.levelGeneration(random_gen, blocks, levels.level, chunk_num)
 
         if chunkWasLoaded:
             chunk_num += 1
 
-        display(WINDOW, blocks, player) # Window dispay
+        functions.display(WINDOW, blocks, player) # Window dispay
 
 
     # Displays the score in console
-    score, chunks_passed, end_time = score_func(current_time, player, blocks)
+    score, chunks_passed, end_time = functions.score_func(current_time, player, blocks)
     print('Chunk nb:', chunks_passed, 'Time:', end_time)
     print('Score:', score)
 
     # Saving
-    filename = "data"
-    save(filename, player_name, score, chunks_passed, end_time, chunk_times, NB_CHUNK)
-    
+    filename = os.path.join(cfg.DATA_FOLDER, cfg.DATA_FILE)
+    functions.save(filename, player_name, score, chunks_passed, end_time, chunk_times, levels.NB_CHUNK)
 
 
 
 if __name__ == "__main__":
 
+    # Solving launch args
     arguments = sys.argv
     player_name = ""
 
     if len(arguments) != 2:
         print("ERROR: Wrong args. Should be like : \n\npython3 main.py name_of_player")
         exit()
-
     else:
         player_name = arguments[1]
 
-    random_gen = False  # Toggles random generation
-    canLose = True
+    # Additional options
+    random_gen = cfg.RANDOM_GEN
+    canLose = cfg.CAN_LOSE
 
 
     main(random_gen, canLose, player_name)
