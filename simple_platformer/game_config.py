@@ -2,31 +2,22 @@
 #-*- coding: utf-8 -*-
 
 ########################
-# Python 3.6.9
+# Python 3.6
 # Author : Maxence Blanc - https://github.com/maxenceblanc
-# Creation Date : 03/2020
 ########################
 
 from pygame.locals import *
 
 import levels.levels as levels
 
-###############################
-###### APP CONFIGURATION ######
-###############################
-
-# Folder for run's data files
-DATA_FOLDER = "data"
-DATA_FILE = "data"
-
-RANDOM_GEN = False  # Toggles random generation
-CAN_LOSE = True # Disables losing, for dev/testing purposes
-
 
 
 ################################
 ###### GAME CONFIGURATION ######
 ################################
+
+RANDOM_GEN = False  # Toggles random generation
+CAN_LOSE = True # Disables losing, for dev/testing purposes
 
 # Coefficient of Proportions (to increase physics proportionally)
 PROPORTION = 1

@@ -1,1 +1,1 @@
-python3 simple-platformer/main.py $1
+python3 simple_platformer/main.py $1

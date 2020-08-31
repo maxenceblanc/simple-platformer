@@ -16,7 +16,7 @@ import pandas as pd
 
 # IMPORTS DE FICHIERS
 import levels.levels as levels
-import config as cfg
+import game_config as cfg
 import entities.Block
 
 
@@ -135,7 +135,7 @@ def levelGeneration(isRandom, blocks, level, chunk_num=None):
     return False
     
 
-### PLAYER ACTIONS ### --------------------
+### ACTIONS ### --------------------
 
 def move(player, blocks):
     """ Detects pressed keys and changes speeds accordingly. 
@@ -202,6 +202,7 @@ def ground(player, blocks):
                 return True
     return False
 
+    
 
 ### WINDOW DISPLAY ### --------------------------
 
@@ -258,9 +259,6 @@ def display(window, blocks, player):
 
     # Refreshes the window
     pygame.display.update()
-
-    print(player.speed_x)
-
 
 
 ### SCORE CALCULATIONS ### --------------------------

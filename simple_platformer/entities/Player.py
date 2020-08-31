@@ -11,7 +11,7 @@ import sys
 import pygame
 
 # FILE IMPORTS
-import config as cfg
+import game_config as cfg
 
 # Sub-modules
 

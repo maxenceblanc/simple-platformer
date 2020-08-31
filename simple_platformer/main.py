@@ -14,7 +14,8 @@ import pygame
 from pygame.locals import *
 
 # EXTRA FILES
-import config as cfg
+import game_config as cfg
+import config
 import functions
 import levels.levels as levels
 import entities.Player
@@ -179,7 +180,7 @@ def main(random_gen, canLose, player_name):
     print('Score:', score)
 
     # Saving
-    filename = os.path.join(cfg.DATA_FOLDER, cfg.DATA_FILE)
+    filename = os.path.join(config.DATA_FOLDER, config.DATA_FILE)
     functions.save(filename, player_name, score, chunks_passed, end_time, chunk_times, levels.NB_CHUNK)
 
 

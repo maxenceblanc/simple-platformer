@@ -8,17 +8,17 @@
 
 # IMPORTS
 import sys
-import pygame
+
+import pickle
 
 # FILE IMPORTS
-import config as cfg
 
 # Sub-modules
 
 
-##################################
-############| BLOCKS |############
-##################################
+############################################
+############| RECORDING SYSTEM |############
+############################################
 
 """ TO DO LIST ✔✘
 """
@@ -33,37 +33,21 @@ import config as cfg
 ###################| CLASSES |######################
 ####################################################
 
-class Block():
-    """ block entity.
-
-        INPUTS: 
-                x coordinate
-                y coordinate
-                type of the block (str)
-        """
-
-    def __init__(self, block_x, block_y, type='default'):
-        
-        # Applies coordinates and sizes.
-        self.rect = pygame.Rect(block_x, block_y, cfg.BLOCK_WIDTH, cfg.BLOCK_HEIGHT)
-
-        # Sets block attributes
-        self.type = type
-
-    def move(self, distance_x, distance_y):
-        """ Moves the blocks relatively.
-
-        INPUTS: 
-                distance in x
-                distance in y
-        """
-        self.rect.x += distance_x
-        self.rect.y += distance_y
 
 ####################################################
 ##################| FUNCTIONS |#####################
 ####################################################
 
+### Recording System ### --------------------
+
+def saveState():
+    """ Saves the current state of the game. This is to be able to replicate
+    states in a replay system.
+
+    TODO
+    """
+
+    pass
 
 ####################################################
 ##################| VARIABLES |#####################
