@@ -1,5 +1,8 @@
 # Simple platformer
 
+Medium article we published : https://medium.com/@adrienlafage36/upside-down-ef746f809a7d
+
+
 ### Dependencies
 
 * pygame
