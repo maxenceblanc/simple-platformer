@@ -17,10 +17,12 @@ import levels.levels as levels
 ################################
 
 RANDOM_GEN = False  # Toggles random generation
-CAN_LOSE = True # False: Disables losing, for dev/testing purposes
+CAN_LOSE = False # False: Disables losing, for dev/testing purposes
 
 # "play"  "dev"  "debug"  "tas"
 APP_MODE = "dev" # Not used yet
+
+FPS = 20
 
 
 MAP_NAME = levels.NAME
@@ -72,6 +74,9 @@ KEY_UP    = K_z
 
 KEY_RECORD = K_o
 KEY_LOAD   = K_p
+
+KEY_RESTART = K_SPACE
+KEY_CUSTOM  = K_n
 
 # Camera keys
 CAMERA_RIGHT   = K_RIGHT

@@ -28,6 +28,7 @@ import recording_system
 """ TODO
 Score refactoring
 Add date to run data
+Pause mode
 TAS system (log + custom start)
 Replay system
 Scoreboard system (best time, bt per chunck)
@@ -37,11 +38,13 @@ training mode with options (like no death, mouse etc.)
 
 class Game():
 
-    def __init__(self, random_gen, can_lose, player_name):
+    # Demo recording
+    DemoRecorder = None
 
+    def __init__(self, player_name):
 
-        self.random_gen = random_gen
-        self.can_lose   = can_lose
+        self.random_gen = cfg.RANDOM_GEN
+        self.can_lose = cfg.CAN_LOSE
 
         self.player_name = player_name
         
@@ -58,10 +61,17 @@ class Game():
 
         self.chunk_times = []
         self.last_time = 0
+        self.current_time = 0.00000000001
+
+        Game.DemoRecorder = recording_system.DemoRecorder(self)
 
     
     def __repr__(self):
-        pass
+        chain = f"simple-platformer\n"
+
+        chain += f"pygame time: {pygame.time.get_ticks() / 1000} secs"
+
+        return chain
 
 
     def idleLoop(self, WINDOW):
@@ -110,14 +120,14 @@ class Game():
         # Using this to wait for the user input to start time but still picture the level
         self.idleLoop(WINDOW)
 
-        self.start_time = pygame.time.get_ticks() / 1000
+        self.pause_time = pygame.time.get_ticks() / 1000
 
 
         # Main loop
         over = False
         while not over:
 
-            CLOCK.tick(20) # 20 FPS
+            CLOCK.tick(cfg.FPS) # FPS cap
 
             for e in pygame.event.get():
                 pygame.event.set_allowed(None)
@@ -127,11 +137,19 @@ class Game():
                 if e.type == pygame.QUIT or (e.type == KEYDOWN and e.key == K_RETURN): # quit condition
                     over = True
                 
-                if e.type == KEYDOWN and e.key == cfg.KEY_RECORD:
-                    functions.record(self)
+                if e.type == KEYDOWN:
 
-                if e.type == KEYDOWN and e.key == cfg.KEY_LOAD:
-                    self = recording_system.loadState("demo_2020-08-31_17-23-33_GMT_test_First-Land.txt")
+                    if e.key == cfg.KEY_RECORD:
+                        Game.DemoRecorder.recordState(self)
+
+                    if e.key == cfg.KEY_RESTART:
+                        Game.DemoRecorder.loadState("demo_start_First-Land.txt")
+
+                    if e.key == cfg.KEY_LOAD:
+                        Game.DemoRecorder.loadState("demo_2020-09-01_15-15-09_GMT_test_First-Land.txt")
+
+                    if e.key == cfg.KEY_CUSTOM:
+                        print(Game.DemoRecorder.app)
 
             if self.player.rect.y + cfg.PLAYER_HEIGHT > cfg.SIZE_Y and self.can_lose:
                 over = True
@@ -153,7 +171,7 @@ class Game():
                     chunks_passed+=1
             
             if chunks_passed == self.prev_chunks_passed + 1:
-                self.current_time = pygame.time.get_ticks() / 1000 - self.start_time
+                self.current_time = pygame.time.get_ticks() / 1000 - self.pause_time
                 print("chunk n°", chunks_passed, ": ", self.current_time)
 
                 self.chunk_times.append(round(self.current_time-self.last_time, 3))
@@ -180,6 +198,32 @@ class Game():
         save_system.save(filename, self.player_name, score, chunks_passed, end_time, self.chunk_times, levels.NB_CHUNK)
 
 
+    def __getstate__(self):
+        """ Method to be called when we need to save the state of the object.
+        It has to describe the fields we want to save and discard others.
+        """
+
+        # 'random_gen', 'can_lose', 'player_name', 'blocks', 'player', 'chunk_num', 'prev_chunks_passed', 'chunk_times', 'last_time', 'pause_time', 'current_time'
+        attributes = self.__dict__.copy()
+
+        # Updating the time for the save. 
+        # TODO: Is it more interesting to put it somewhere else?
+        pause_time = pygame.time.get_ticks() / 1000 - self.pause_time
+        attributes['pause_time'] = pause_time
+
+        del attributes['can_lose']
+        
+        return attributes
+
+    def __setstate__(self, data):
+        """ Method to be called when we need to restore the state of the object.
+        It has to restore the fields from the saved data and re-create others.
+        """
+
+        self.__dict__ = data
+        self.can_lose = cfg.CAN_LOSE
+
+        self.pause_time = pygame.time.get_ticks() / 1000 - self.pause_time
 
 
 if __name__ == "__main__":
@@ -194,10 +238,6 @@ if __name__ == "__main__":
     else:
         player_name = arguments[1]
 
-    # Additional options
-    random_gen = cfg.RANDOM_GEN
-    can_lose = cfg.CAN_LOSE
-
 
     # Initializes pygame
     pygame.init()
@@ -210,7 +250,7 @@ if __name__ == "__main__":
     WINDOW = pygame.display.set_mode((cfg.SIZE_X, # Dimensions of WINDOW
                                       cfg.SIZE_Y))
 
-    game = Game(random_gen, can_lose, player_name)
+    game = Game(player_name)
     game.main(WINDOW, CLOCK)
 
     pygame.quit()

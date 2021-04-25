@@ -201,12 +201,6 @@ def ground(player, blocks):
                 return True
     return False
 
-def record(game):
-    """
-    """
-
-    state = recording_system.serializeState(game)
-    recording_system.saveDemo(state, game.player_name, cfg.MAP_NAME)
 
 ### WINDOW DISPLAY ### --------------------------
 

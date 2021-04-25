@@ -34,7 +34,7 @@ Make sure you have all the below listed dependencies installed.
 ### How to play
 
 ```sh
-$ python3 main.py name
+$ sh simple-platformer.sh name
 ```
 
 * name: player's name
